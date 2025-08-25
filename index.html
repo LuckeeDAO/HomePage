@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于比特承诺模型的去中心化投票系统</title>
+    <meta name="description" content="基于比特承诺模型的去中心化决策投票系统，结合Rust WebAssembly高性能计算与区块链技术">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; padding: 80px 0; text-align: center; }
+        .header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 20px; }
+        .header p { font-size: 1.25rem; margin-bottom: 30px; opacity: 0.9; }
+        .btn { padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block; margin: 0 10px; }
+        .btn-primary { background-color: white; color: #2563eb; }
+        .btn-secondary { background-color: transparent; color: white; border: 2px solid white; }
+        .section { padding: 80px 0; }
+        .section:nth-child(even) { background-color: #f8fafc; }
+        .section-title { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 60px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .feature-card { background: white; padding: 40px 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; }
+        .feature-icon { font-size: 3rem; margin-bottom: 20px; }
+        .use-cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .use-case { background: white; padding: 30px; border-radius: 12px; border-left: 4px solid #2563eb; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .status { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.875rem; font-weight: 500; }
+        .status.active { background-color: #10b981; color: white; }
+        .status.coming { background-color: #f59e0b; color: white; }
+        .footer { background-color: #1f2937; color: white; padding: 60px 0 30px; text-align: center; }
+        @media (max-width: 768px) { .header h1 { font-size: 2rem; } .section-title { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>基于比特承诺模型的去中心化投票系统</h1>
+            <p>结合Rust WebAssembly高性能计算与区块链技术的不可篡改特性，支持大规模决策场景</p>
+            <div style="margin: 20px 0; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(10px);">
+                <h3 style="margin-bottom: 15px; color: #e0e7ff;">🎯 核心价值</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: left;">
+                    <div>
+                        <strong>🔐 隐私保护</strong><br>
+                        <small>比特承诺协议确保投票隐私</small>
+                    </div>
+                    <div>
+                        <strong>⚡ 高性能</strong><br>
+                        <small>Rust WebAssembly并行计算</small>
+                    </div>
+                    <div>
+                        <strong>🔗 去中心化</strong><br>
+                        <small>Injective区块链不可篡改</small>
+                    </div>
+                    <div>
+                        <strong>✅ 可验证</strong><br>
+                        <small>透明计算过程可公开验证</small>
+                    </div>
+                </div>
+            </div>
+            <a href="#docs" class="btn btn-primary">查看文档</a>
+            <a href="https://github.com/your-username/your-repo" class="btn btn-secondary">GitHub</a>
+        </div>
+    </header>
+
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="section-title">🎯 核心特性</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>隐私保护</h3>
+                    <p>使用比特承诺协议确保决策人偏好投票内容在揭示前对第三方不可见，保护用户隐私安全。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>高性能</h3>
+                    <p>基于Rust WebAssembly的高性能计算引擎，支持大规模并发投票和实时结果计算。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>去中心化</h3>
+                    <p>基于Injective区块链平台，确保数据不可篡改，实现真正去中心化的决策机制。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3>可验证性</h3>
+                    <p>所有决策结果透明可验证，计算过程公开，任何人都可以验证结果的正确性。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>NFT化</h3>
+                    <p>通过NFT管理投票资格和项目属性，支持投票资格的转移和交易。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🪙</div>
+                    <h3>代币权限</h3>
+                    <p>基于$LUCKEE代币的权限控制系统，支持多级权限管理和动态权限调整。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="use-cases" class="section">
+        <div class="container">
+            <h2 class="section-title">🚀 应用场景</h2>
+            
+            <!-- 应用场景概述 -->
+            <div style="text-align: center; margin-bottom: 50px; padding: 30px; background: #eff6ff; border-radius: 12px;">
+                <h3 style="color: #2563eb; margin-bottom: 15px;">NFT类型驱动架构</h3>
+                <p style="color: #374151; font-size: 1.1rem;">所有应用场景通过不同的NFT类型来实现，投票项目为NFT管理的属性接口，由NFT类型的全局参数配置决定性质、规则和行为。</p>
+            </div>
+            
+            <div class="use-cases">
+                <div class="use-case">
+                    <h3>🎲 去中心化抽奖</h3>
+                    <p><strong>NFT类型：</strong>lottery_activity</p>
+                    <p>支持n选1、n选k的公平抽奖，每个参与者的随机数都会影响最终结果，确保公平性和透明性。</p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>比特承诺保护参与者隐私</li>
+                        <li>多等级抽奖和奖品分配</li>
+                        <li>中奖序号与NFT关联</li>
+                        <li>完整的审计和验证机制</li>
+                    </ul>
+                    <span class="status active">当前支持</span>
+                </div>
+                <div class="use-case">
+                    <h3>🎰 去中心化彩票</h3>
+                    <p><strong>NFT类型：</strong>lottery_ticket</p>
+                    <p>基于集体偏好的彩票系统，透明开奖，自动分配奖金，消除传统彩票的信任问题。</p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>集体偏好决定开奖号码</li>
+                        <li>自动奖金分配机制</li>
+                        <li>透明可验证的开奖过程</li>
+                        <li>防作弊和操纵保护</li>
+                    </ul>
+                    <span class="status coming">后续迭代</span>
+                </div>
+                <div class="use-case">
+                    <h3>📊 去中心化分配</h3>
+                    <p><strong>NFT类型：</strong>resource_allocation</p>
+                    <p>基于偏好的资源分配系统，公平分配有限资源，自动执行分配结果。</p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>偏好驱动的资源分配算法</li>
+                        <li>公平性和效率平衡</li>
+                        <li>自动执行分配结果</li>
+                        <li>支持复杂分配规则</li>
+                    </ul>
+                    <span class="status coming">后续迭代</span>
+                </div>
+                <div class="use-case">
+                    <h3>🗳️ 去中心化治理投票</h3>
+                    <p><strong>NFT类型：</strong>governance_vote</p>
+                    <p>社区治理决策投票，隐私保护，结果可验证，支持复杂的治理决策场景。</p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>隐私保护的投票机制</li>
+                        <li>复杂治理规则支持</li>
+                        <li>结果可验证和审计</li>
+                        <li>代币权重投票</li>
+                    </ul>
+                    <span class="status coming">后续迭代</span>
+                </div>
+            </div>
+
+            <!-- 技术流程 -->
+            <div style="background: #f8fafc; padding: 40px; border-radius: 16px; margin: 40px 0;">
+                <h3 style="text-align: center; margin-bottom: 30px; color: #2563eb;">统一技术流程</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">1️⃣ NFT分发</h4>
+                        <p>系统通过分发NFT来管理参与者，替代传统的用户注册功能</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">2️⃣ 偏好提交</h4>
+                        <p>每个NFT持有者提交偏好值，使用比特承诺协议保护隐私</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">3️⃣ 结果计算</h4>
+                        <p>系统汇总所有偏好值，通过算法生成最终结果</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">4️⃣ 结果执行</h4>
+                        <p>自动执行分配结果，更新资源状态</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="technology" class="section">
+        <div class="container">
+            <h2 class="section-title">🛠️ 技术架构</h2>
+            
+            <!-- 核心技术栈 -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Injective</h3>
+                    <p>基于CosmWasm的区块链平台，提供不可篡改的最小化上链记录</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Rust + CosmWasm</h3>
+                    <p>智能合约开发框架，确保安全性和高性能</p>
+                </div>
+                <div class="feature-card">
+                    <h3>WebAssembly</h3>
+                    <p>高性能计算引擎，支持大规模并发处理</p>
+                </div>
+                <div class="feature-card">
+                    <h3>IPFS</h3>
+                    <p>去中心化存储，承载承诺/揭示明细和审计日志</p>
+                </div>
+                <div class="feature-card">
+                    <h3>比特承诺协议</h3>
+                    <p>密码学协议，确保投票隐私和可验证性</p>
+                </div>
+                <div class="feature-card">
+                    <h3>NFT类型驱动</h3>
+                    <p>统一架构抽象，支持多种应用场景</p>
+                </div>
+            </div>
+
+            <!-- 系统架构图 -->
+            <div style="background: #eff6ff; padding: 40px; border-radius: 16px; margin: 40px 0;">
+                <h3 style="text-align: center; margin-bottom: 30px; color: #2563eb;">系统架构图</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">前端界面</h4>
+                        <p>用户交互层</p>
+                        <small>偏好提交、验证工具</small>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">WebAssembly服务</h4>
+                        <p>计算引擎</p>
+                        <small>会话编排、承诺处理</small>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">智能合约</h4>
+                        <p>业务逻辑层</p>
+                        <small>CW721 NFT、比特承诺</small>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">IPFS存储</h4>
+                        <p>数据存储层</p>
+                        <small>明细存储、CID验证</small>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">Injective链</h4>
+                        <p>区块链层</p>
+                        <small>不可篡改记录</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 技术特点 -->
+            <div style="background: #f8fafc; padding: 40px; border-radius: 16px; margin: 40px 0;">
+                <h3 style="text-align: center; margin-bottom: 30px; color: #2563eb;">核心技术特点</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div>
+                        <h4 style="color: #2563eb; margin-bottom: 15px;">🔐 比特承诺协议</h4>
+                        <p>承诺：c = H(m || r)，其中 m 为偏好/随机数，r 为随机盐<br>
+                        揭示：公开 m 与 r，任何人可复算 H(m || r) 与 c 校验一致<br>
+                        特性：绑定性与隐藏性，保证揭示前隐私、揭示后可验证</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #2563eb; margin-bottom: 15px;">🎨 NFT类型驱动架构</h4>
+                        <p>NFT类型承载"应用场景配置"的抽象（抽奖/彩票/分配/治理等）<br>
+                        投票/抽奖"项目"是NFT管理的属性接口<br>
+                        资格以"账户-NFT持有"判定，支持转移和交易</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #2563eb; margin-bottom: 15px;">⚡ 高性能计算</h4>
+                        <p>Rust WebAssembly并行化处理<br>
+                        批处理与缓存策略<br>
+                        支持大规模并发投票和实时结果计算</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #2563eb; margin-bottom: 15px;">🔗 去中心化存储</h4>
+                        <p>IPFS保存明细，链上仅保存摘要/索引<br>
+                        Merkle/哈希验证链路<br>
+                        单一真实源（SoT）以IPFS的CID作为唯一真实源</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 代码示例 -->
+            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 0.9rem; overflow-x: auto; margin: 20px 0;">
+                <strong>示例：去中心化抽奖流程</strong><br>
+                <code>
+// 参与者提交随机数
+const participants = [3, 7, 2, 9, 1];<br>
+// 计算总和
+const total = participants.reduce((sum, num) => sum + num, 0); // 22<br>
+// 取余得到结果
+const result = total % participants.length; // 22 % 5 = 2<br>
+// 2号参与者中奖<br><br>
+// 比特承诺示例
+const commitment = sha256(preference + randomness);<br>
+// 揭示时验证
+const isValid = sha256(revealedPreference + revealedRandomness) === commitment;
+                </code>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="section">
+        <div class="container">
+            <h2 class="section-title">🗺️ 项目路线图</h2>
+            
+            <!-- 开发阶段说明 -->
+            <div style="text-align: center; margin-bottom: 50px; padding: 30px; background: #eff6ff; border-radius: 12px;">
+                <h3 style="color: #2563eb; margin-bottom: 15px;">开发阶段规划</h3>
+                <p style="color: #374151; font-size: 1.1rem;">基于技术架构的渐进式开发，确保每个阶段都有可交付的产品价值</p>
+            </div>
+            
+            <div class="use-cases">
+                <div class="use-case">
+                    <h3>📋 Phase 1 (当前阶段)</h3>
+                    <p><strong>核心目标：</strong>建立基础架构，实现去中心化抽奖功能</p>
+                    <ul>
+                        <li><strong>基础架构搭建</strong> - Rust + CosmWasm智能合约框架</li>
+                        <li><strong>比特承诺协议实现</strong> - SHA256哈希函数，承诺-揭示机制</li>
+                        <li><strong>NFT管理系统</strong> - CW721标准，类型驱动架构</li>
+                        <li><strong>去中心化抽奖功能</strong> - n选1、n选k算法实现</li>
+                        <li><strong>多目标选择算法</strong> - 防冲突算法，序号分配</li>
+                        <li><strong>iAgent自动化功能</strong> - 自动承诺/揭示，审计日志</li>
+                        <li><strong>IPFS集成</strong> - 去中心化存储，CID验证</li>
+                        <li><strong>代币权限控制</strong> - $LUCKEE代币持有验证</li>
+                    </ul>
+                    <div style="margin-top: 20px; padding: 15px; background: #f0fdf4; border-radius: 8px;">
+                        <strong>技术里程碑：</strong>完整的去中心化抽奖系统，支持大规模参与者
+                    </div>
+                </div>
+                <div class="use-case">
+                    <h3>🚀 Phase 2 (后续迭代)</h3>
+                    <p><strong>核心目标：</strong>扩展应用场景，提升系统能力</p>
+                    <ul>
+                        <li><strong>去中心化彩票系统</strong> - 集体偏好开奖，自动奖金分配</li>
+                        <li><strong>去中心化分配系统</strong> - 偏好驱动资源分配算法</li>
+                        <li><strong>去中心化治理投票</strong> - 复杂治理规则，代币权重投票</li>
+                        <li><strong>跨链功能支持</strong> - 多链集成，资产桥接</li>
+                        <li><strong>移动端应用</strong> - 移动端SDK，原生应用</li>
+                        <li><strong>API开放平台</strong> - 开发者API，第三方集成</li>
+                        <li><strong>高级自动化</strong> - 智能触发，条件执行</li>
+                        <li><strong>性能优化</strong> - 大规模并发，缓存优化</li>
+                    </ul>
+                    <div style="margin-top: 20px; padding: 15px; background: #fef3c7; border-radius: 8px;">
+                        <strong>技术里程碑：</strong>完整的去中心化决策投票生态系统
+                    </div>
+                </div>
+            </div>
+
+            <!-- 技术演进 -->
+            <div style="background: #f8fafc; padding: 40px; border-radius: 16px; margin: 40px 0;">
+                <h3 style="text-align: center; margin-bottom: 30px; color: #2563eb;">技术演进路径</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div>
+                        <h4 style="color: #2563eb; margin-bottom: 15px;">🔧 基础设施层</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>Rust智能合约开发</li>
+                            <li>CosmWasm框架集成</li>
+                            <li>IPFS存储策略</li>
+                            <li>WebAssembly计算引擎</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #2563eb; margin-bottom: 15px;">🔐 安全与隐私层</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>比特承诺协议实现</li>
+                            <li>密码学安全验证</li>
+                            <li>隐私保护机制</li>
+                            <li>防重放攻击</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #2563eb; margin-bottom: 15px;">🎨 应用场景层</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>NFT类型驱动架构</li>
+                            <li>多应用场景支持</li>
+                            <li>统一状态机管理</li>
+                            <li>自动化流程控制</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #2563eb; margin-bottom: 15px;">🚀 扩展与优化层</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>跨链功能集成</li>
+                            <li>性能优化策略</li>
+                            <li>开发者工具链</li>
+                            <li>生态系统建设</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="docs" class="section">
+        <div class="container">
+            <h2 class="section-title">📚 文档资源</h2>
+            
+            <!-- 文档分类 -->
+            <div style="text-align: center; margin-bottom: 50px; padding: 30px; background: #eff6ff; border-radius: 12px;">
+                <h3 style="color: #2563eb; margin-bottom: 15px;">完整技术文档体系</h3>
+                <p style="color: #374151; font-size: 1.1rem;">从项目概述到技术实现，从架构设计到开发指南，提供完整的技术文档支持</p>
+            </div>
+            
+            <!-- 核心文档 -->
+            <h3 style="color: #2563eb; margin-bottom: 30px; text-align: center;">核心文档</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>📖 项目总览</h3>
+                    <p>项目完整概述，包含系统介绍、技术架构、开发计划和风险评估。</p>
+                    <a href="docs/项目总览.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>📋 需求说明书</h3>
+                    <p>详细的功能需求说明，包含所有应用场景和技术要求。</p>
+                    <a href="docs/需求说明书.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>🔧 技术白皮书</h3>
+                    <p>技术实现方案和架构设计，包含核心技术选型和实现细节。</p>
+                    <a href="docs/技术白皮书.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>🏗️ 设计说明书</h3>
+                    <p>系统架构设计和详细技术设计，包含数据库设计和接口规范。</p>
+                    <a href="docs/概要设计说明书.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+            </div>
+
+            <!-- 技术选型文档 -->
+            <h3 style="color: #2563eb; margin-bottom: 30px; text-align: center; margin-top: 60px;">技术选型文档</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🦀 Rust智能合约开发指南</h3>
+                    <p>基于CosmWasm框架的智能合约开发指南，包含环境搭建、项目结构和核心组件。</p>
+                    <a href="docs/技术选型/Rust智能合约开发指南.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>🌐 IPFS存储策略设计</h3>
+                    <p>去中心化存储策略设计，包含CID验证、Merkle树和数据完整性保证。</p>
+                    <a href="docs/技术选型/IPFS存储策略设计说明书.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>🤖 iAgent自动化功能设计</h3>
+                    <p>自动化功能设计说明书，包含自动承诺/揭示、审计日志和智能触发机制。</p>
+                    <a href="docs/技术选型/iAgent自动化功能设计说明书.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>🎨 多应用场景支持设计</h3>
+                    <p>多应用场景支持设计说明书，包含NFT类型驱动架构和统一技术框架。</p>
+                    <a href="docs/技术选型/多应用场景支持设计说明书.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>🎯 多目标选择技术实现</h3>
+                    <p>多目标选择技术实现方案，包含n选k算法、防冲突机制和序号分配策略。</p>
+                    <a href="docs/技术选型/多目标选择技术实现方案.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 技术脉络总结</h3>
+                    <p>技术脉络总结文档，梳理整个系统的技术架构和实现路径。</p>
+                    <a href="docs/技术选型/技术脉络总结.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+            </div>
+
+            <!-- 其他文档 -->
+            <h3 style="color: #2563eb; margin-bottom: 30px; text-align: center; margin-top: 60px;">其他文档</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>📈 可行性分析报告</h3>
+                    <p>项目可行性分析报告，包含技术可行性、经济可行性和风险评估。</p>
+                    <a href="docs/可行性分析报告.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+                <div class="feature-card">
+                    <h3>📝 项目术语表</h3>
+                    <p>项目术语表，统一技术术语和概念定义，确保文档一致性。</p>
+                    <a href="docs/项目术语表.html" class="btn btn-primary" style="margin-top: 20px;">查看文档</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 基于比特承诺模型的去中心化投票系统. 采用 MIT 许可证.</p>
+            <p>保护用户隐私，私钥等信息不提交到后台</p>
+        </div>
+    </footer>
+</body>
+</html> 
