@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>项目总览</title>
+    <style>
+        body {
+            max-width: 860px;
+            margin: 32px auto;
+            padding: 0 16px;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+        pre { background:#f8fafc; padding:12px; overflow:auto; border-radius:6px; }
+        code { background:#f1f5f9; padding:2px 4px; border-radius:4px; }
+        h1,h2,h3,h4,h5,h6 { line-height:1.25; }
+        a { color:#2563eb; text-decoration:none; }
+        a:hover { text-decoration:underline; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #e5e7eb; padding: 8px; }
+        blockquote { margin: 0; padding-left: 1em; border-left: 4px solid #e5e7eb; color:#6b7280; }
+    </style>
+</head>
+<body>
+<h1 id="-">基于比特承诺模型的去中心化投票系统 - 项目总览</h1>
+<blockquote>
+<p>用词规范：请参阅《<a href="项目术语表.html">项目术语表</a>》以确保术语统一。</p>
+</blockquote>
+<h2 id="_1">项目简介</h2>
+<blockquote>
+<p>📖 <strong>项目总览说明</strong>：本文档是项目的详细概述，包含完整的系统介绍、技术架构、开发计划和风险评估。如果您需要快速了解项目，请先阅读<a href="../README.md">README.md</a>。</p>
+</blockquote>
+<p>本项目旨在构建一个基于比特承诺模型的去中心化决策投票系统，结合Rust WebAssembly高性能计算与区块链技术的不可篡改特性，支持大规模决策场景。系统通过密码学技术确保决策人偏好投票的隐私性，利用区块链保证数据完整性，实现真正去中心化的决策机制。</p>
+<blockquote>
+<p>范围声明（Phase 1）：第一期仅支持去中心化抽奖（n选1、n选k）。去中心化彩票、分配、治理等其他应用场景纳入后续迭代。</p>
+</blockquote>
+<p>去中心化决策投票的核心特征是：决策结果不依赖任何一个人或者一部分人，其结果包含了全体决策人的偏好汇总，任何一个人的投票结果都会影响最后的结果。每个决策人的偏好用整数表示，系统通过透明且可验证的计算过程，汇总所有人的偏好，得出最终的决策结果。</p>
+<h3 id="_2">决策类型统一术语与分类</h3>
+<ul>
+<li>按结果基数：</li>
+<li>单目标决策：每次仅产生一个获胜结果（例：单一中奖、单提案通过）。</li>
+<li>多目标决策：一次产生多个互不冲突的获胜结果（例：从n选k）。</li>
+<li>按资源属性（分配/治理）：</li>
+<li>竞用性资源决策：有限且排他（名额/额度等）。</li>
+<li>非竞用性资源决策：非排他，可并行满足（公共品偏好）。</li>
+<li>扩展性：通过NFT类型抽象承载，未来可新增更多决策类型。</li>
+</ul>
+<h4 id="_3">具体应用场景：去中心化抽奖</h4>
+<p>以去中心化抽奖为例，系统的工作流程如下：
+1. <strong>参与者注册</strong>：每个抽奖参与者通过数字身份注册
+2. <strong>提交随机数</strong>：每个参与者提交一个整数作为自己的随机数
+3. <strong>隐私保护</strong>：使用比特承诺协议保护每个参与者的随机数不被泄露
+4. <strong>结果计算</strong>：系统累加所有参与者的整数之和，并对投票总人数进行取余
+5. <strong>结果验证</strong>：最终得到的余数作为抽奖结果，整个过程透明可验证</p>
+<p><strong>具体示例</strong>：
+- 有5个参与者，分别提交整数[3, 7, 2, 9, 1]
+- 总和为22，对5取余得到2
+- 抽奖结果为2号参与者（索引从0开始）
+- 任何人都可以验证计算过程：22 % 5 = 2 ✓</p>
+<p><strong>技术优势</strong>：
+- <strong>公平性</strong>：每个参与者的随机数都会影响最终结果
+- <strong>透明性</strong>：计算过程完全公开可验证
+- <strong>防作弊</strong>：通过密码学技术防止参与者操纵结果
+- <strong>去中心化</strong>：不依赖任何中心化机构</p>
+<h4 id="nft">系统功能：代币权限控制与NFT化投票</h4>
+<p>系统包含基于$LUCKEE代币持有量的权限控制和NFT化的投票资格管理功能：</p>
+<ol>
+<li>
+<p><strong>代币权限控制</strong>：
+   - 只有持有$LUCKEE代币的账户才可以创建投票项目
+   - 代币持有量决定用户权限等级（基础、创建者、管理员）
+   - 支持代币质押和锁定机制</p>
+</li>
+<li>
+<p><strong>NFT化投票资格与投票项目属性接口</strong>：
+   - 投票项目管理是NFT管理的一个属性接口；项目配置均为NFT类型的全局参数（如时间窗口、偏好范围、是否抽奖/多目标等）
+   - 投票资格以账户-<code>NFT</code>的持有关系为准；链上主要记录账户与<code>NFT</code>的关联信息与投票结果摘要
+   - 详细投票数据（承诺/揭示明细、参与者列表、计算过程、证明与日志）存储在IPFS，链上保存其CID/哈希作为验证指针
+   - 不同投票类型通过不同<code>NFT类型</code>承载与区分；支持<code>NFT</code>的转移和交易</p>
+</li>
+<li>
+<p><strong>多等级选择（多组多目标选择）</strong>：
+   - 支持设置不同的等级与每个等级的数量（等价多个 n 选 k 的组合）
+   - 每个NFT拥有与选择相关的序号/结果关联
+   - 智能序号分配算法
+   - 支持批量选择结果生成</p>
+</li>
+</ol>
+<h2 id="_4">核心特性</h2>
+<h3 id="_5">🔐 隐私保护</h3>
+<ul>
+<li><strong>比特承诺协议</strong>：确保决策人偏好投票内容在揭示前对第三方不可见</li>
+<li><strong>端到端加密</strong>：保护决策人数据安全</li>
+<li><strong>范围声明</strong>：零知识证明不在本系统技术范围且不作为选项</li>
+</ul>
+<h3 id="_6">⚡ 高性能</h3>
+<ul>
+<li><strong>Rust WebAssembly</strong>：服务器端高性能计算</li>
+<li><strong>并行处理</strong>：支持大规模并发投票</li>
+<li><strong>缓存优化</strong>：多层缓存策略提升响应速度</li>
+</ul>
+<h3 id="_7">🔗 去中心化</h3>
+<ul>
+<li><strong>区块链存储</strong>：关键数据不可篡改</li>
+<li><strong>IPFS存储</strong>：去中心化数据存储</li>
+<li><strong>多节点支持</strong>：避免单点故障</li>
+</ul>
+<h3 id="_8">✅ 可验证性</h3>
+<ul>
+<li><strong>公开验证</strong>：所有决策结果可公开验证</li>
+<li><strong>透明计算</strong>：偏好汇总计算过程透明可验证</li>
+<li><strong>Merkle树</strong>：数据完整性证明</li>
+<li><strong>数字签名</strong>：身份认证和防篡改</li>
+</ul>
+<h3 id="_9">🪙 代币权限控制</h3>
+<ul>
+<li><strong>$LUCKEE代币验证</strong>：基于代币持有量的权限管理</li>
+<li><strong>多级权限系统</strong>：支持基础、创建者、管理员权限</li>
+<li><strong>动态权限调整</strong>：根据代币持有量自动调整权限</li>
+</ul>
+<h3 id="nft_1">🎨 NFT化投票资格</h3>
+<ul>
+<li><strong>投票资格NFT</strong>：以账户-<code>NFT</code>持有关系确定资格，投票项目作为<code>NFT</code>属性接口配置</li>
+<li><strong>智能合约管理</strong>：基于CW721标准的NFT合约</li>
+<li><strong>元数据与明细</strong>：IPFS存储NFT元数据与投票明细，链上仅存摘要/结果</li>
+<li><strong>序号关联</strong>：NFT包含结果相关信息</li>
+</ul>
+<h3 id="_10">🎯 多等级选择（多组多目标选择）</h3>
+<ul>
+<li><strong>等级配置管理</strong>：支持自定义等级与组合</li>
+<li><strong>智能选择</strong>：基于投票数据的公平选择算法</li>
+<li><strong>序号分配</strong>：为每个结果分配唯一序号</li>
+<li><strong>结果验证审计</strong>：完整的结果验证和审计机制</li>
+</ul>
+<blockquote>
+<p>关系澄清：唯一中奖是多目标选择（n 选 k）的特例（k=1）；多等级选择等价于多个 n 选 k 的组合（各等级各自的 k 与规则），可视为“多组多目标选择”。</p>
+</blockquote>
+<h3 id="_11">🎲 多目标选择（抽奖/彩票的选择模式）</h3>
+<ul>
+<li><strong>公平选择机制</strong>：从n个参与者中选出k个不同的序号</li>
+<li><strong>iAgent自动化</strong>：自动化处理承诺和揭示过程，减少用户操作负担</li>
+<li><strong>策略性选择</strong>：参与者可根据策略选择偏好值影响结果</li>
+<li><strong>防冲突算法</strong>：确保所有序号互不相同，支持大规模参与者</li>
+<li><strong>透明验证</strong>：完整的计算过程证明，支持第三方验证和审计</li>
+</ul>
+<blockquote>
+<p>偏好值说明：单个多目标选择对应 1 组偏好值；多个多目标选择（如多等级）对应多组偏好值（各选择/等级各一组）。</p>
+</blockquote>
+<h2 id="_12">技术架构</h2>
+<h3 id="_13">技术栈选择</h3>
+<ul>
+<li><strong>核心语言</strong>：Rust + WebAssembly</li>
+<li><strong>区块链平台</strong>：Injective Protocol</li>
+<li><strong>智能合约</strong>：Rust (CosmWasm)</li>
+<li><strong>密码学库</strong>：RustCrypto、sha2、rand</li>
+<li><strong>存储方案</strong>：IPFS去中心化存储 + 链上哈希验证</li>
+<li><strong>前端框架</strong>：React + TypeScript</li>
+<li><strong>代币标准</strong>：CW20 (CosmWasm代币标准)</li>
+<li><strong>NFT标准</strong>：CW721 (CosmWasm NFT标准)</li>
+</ul>
+<h4 id="_14">存储边界与单一真实源</h4>
+<ul>
+<li>链上最小化：仅记录账户-<code>NFT</code>关联与必要结果摘要/哈希/CID及少量索引，控制Gas与状态膨胀。</li>
+<li>链下明细（IPFS）：承载承诺/揭示明细、参与者列表、计算过程与证明、会话完整配置与审计日志。</li>
+<li>单一真实源（Single Source of Truth）：以 IPFS <code>CID/版本</code>作为配置与明细的唯一真实源；链上仅做完整性校验与可验证引用。</li>
+</ul>
+<h3 id="_15">系统模块</h3>
+<ol>
+<li><strong>密码学核心模块</strong> - 比特承诺协议、随机数生成、哈希函数、序号生成</li>
+<li><strong>代币验证模块</strong> - 代币持有验证、权限控制、多级权限管理</li>
+<li><strong>NFT管理模块</strong> - NFT创建、元数据管理、投票资格验证、序号分配</li>
+<li><strong>多等级选择模块</strong> - 等级配置、结果选择、序号分配</li>
+<li><strong>多目标选择模块</strong> - 公平选择算法、iAgent自动化、会话管理、结果验证</li>
+<li><strong>WebAssembly服务器模块</strong> - 决策投票生命周期管理、区块链接口、存储适配</li>
+<li><strong>区块链智能合约</strong> - 偏好投票承诺存储、决策结果验证、状态管理、代币合约、NFT合约</li>
+<li><strong>客户端SDK</strong> - 偏好投票操作封装、验证工具、连接管理、NFT管理、代币验证</li>
+<li><strong>存储策略模块</strong> - 链上优化、IPFS适配、完整性验证、NFT元数据存储</li>
+</ol>
+<h2 id="_16">文档体系</h2>
+<h3 id="_17">📋 需求说明书</h3>
+<ul>
+<li><strong>项目背景与目标</strong>：明确系统建设目的和预期效果</li>
+<li><strong>功能需求</strong>：详细描述用户管理、投票管理、结果管理等核心功能</li>
+<li><strong>代币权限需求</strong>：代币持有验证、权限等级管理</li>
+<li><strong>NFT功能需求</strong>：NFT创建、投票资格管理、中奖序号关联</li>
+<li><strong>抽奖等级需求</strong>：多等级抽奖、中奖者选择、结果验证</li>
+<li><strong>多目标选择需求</strong>：公平选择算法、iAgent自动化、会话管理、结果验证</li>
+<li><strong>非功能需求</strong>：性能、安全、可靠性、兼容性等质量要求</li>
+<li><strong>系统约束</strong>：技术、法律、业务等约束条件</li>
+<li><strong>验收标准</strong>：功能、性能、安全等验收指标</li>
+</ul>
+<blockquote>
+<p>关系说明：唯一中奖=k=1；多等级=多个 n 选 k 组合；偏好组按会话/等级划分；资源分配按竞用性/非竞用性进行需求拆分。</p>
+</blockquote>
+<h3 id="_18">🏗️ 概要设计说明书</h3>
+<ul>
+<li><strong>系统架构</strong>：整体架构图和分层设计</li>
+<li><strong>模块设计</strong>：各模块的接口定义和职责划分</li>
+<li><strong>代币验证设计</strong>：代币持有验证、权限控制架构</li>
+<li><strong>NFT管理设计</strong>：NFT创建流程、投票资格验证</li>
+<li><strong>抽奖等级设计</strong>：等级配置、中奖算法、序号分配</li>
+<li><strong>多目标选择设计</strong>：公平选择算法、iAgent自动化、会话管理</li>
+<li><strong>数据流设计</strong>：投票提交流程、揭示流程、验证流程</li>
+<li><strong>接口设计</strong>：RESTful API、WebSocket、区块链事件</li>
+<li><strong>安全设计</strong>：隐私保护、数据安全、系统安全、代币安全</li>
+<li><strong>性能优化</strong>：计算优化、存储优化、网络优化</li>
+</ul>
+<blockquote>
+<p>设计关系：唯一中奖视为 n 选 1；多等级=多个 n 选 k；偏好组按选择维度分组；资源分配按竞用性/非竞用性建模。</p>
+</blockquote>
+<h3 id="_19">🔧 详细设计说明书</h3>
+<ul>
+<li><strong>密码学实现</strong>：比特承诺协议的具体算法和数据结构、中奖序号生成算法</li>
+<li><strong>代币验证实现</strong>：代币持有验证、权限控制、多级权限管理</li>
+<li><strong>NFT管理实现</strong>：NFT创建、元数据管理、投票资格验证、中奖序号分配</li>
+<li><strong>抽奖等级实现</strong>：等级配置管理、中奖者选择算法、结果验证审计</li>
+<li><strong>多目标选择实现</strong>：公平选择算法、iAgent自动化、会话管理、结果验证</li>
+<li><strong>WebAssembly模块</strong>：投票生命周期状态机和区块链交互接口</li>
+<li><strong>智能合约</strong>：Injective合约的完整代码实现、代币合约、NFT合约</li>
+<li><strong>客户端SDK</strong>：TypeScript SDK的完整实现、NFT管理接口、代币验证接口</li>
+<li><strong>存储策略</strong>：分层存储和数据完整性验证机制、NFT元数据存储</li>
+<li><strong>性能优化</strong>：WebAssembly优化和缓存策略、批量操作优化</li>
+<li><strong>安全机制</strong>：防重放攻击和输入验证、代币安全、NFT安全</li>
+<li><strong>测试策略</strong>：单元测试和集成测试、抽奖算法测试</li>
+<li><strong>部署配置</strong>：Docker配置和环境设置</li>
+</ul>
+<blockquote>
+<p>实现关系：唯一中奖=n 选 1；多等级=多个 n 选 k 的编排；偏好组映射到选择实例；资源分配实现区分竞用性/非竞用性策略与约束。</p>
+</blockquote>
+<h2 id="_20">📚 文档关系与功能定位</h2>
+<h3 id="_21">🔗 文档层次结构</h3>
+<div class="codehilite"><pre><span></span><code>项目总览.md (顶层概述)
+    │
+    ├── README.md (快速入门)
+    │   ├── 项目简介
+    │   ├── 快速开始
+    │   └── 技术栈概览
+    │
+    ├── 需求说明书.md (需求定义)
+    │   ├── 功能需求
+    │   ├── 非功能需求
+    │   └── 验收标准
+    │
+    ├── 概要设计说明书.md (架构设计)
+    │   ├── 系统架构
+    │   ├── 模块设计
+    │   └── 接口定义
+    │
+    ├── 详细设计说明书.md (实现设计)
+    │   ├── 算法实现
+    │   ├── 代码结构
+    │   └── 部署配置
+    │
+    └── 技术选型/ (技术方案)
+        ├── 技术脉络总结.md
+        ├── 多目标选择技术实现方案.md
+        ├── 多应用场景支持设计说明书.md
+        ├── IPFS存储策略设计说明书.md
+        ├── iAgent自动化功能设计说明书.md
+        └── Rust智能合约开发指南.md
+</code></pre></div>
+
+<h3 id="_22">📋 各文档详细功能定位</h3>
+<h4 id="1-readmemd-">1. <strong>README.md - 项目入口和快速导航</strong></h4>
+<p><strong>主要作用</strong>：
+- 项目快速入门指南
+- 技术栈概览和快速开始
+- 文档导航和快速定位</p>
+<p><strong>功能定位</strong>：
+- <strong>目标用户</strong>：新用户、快速浏览者、开发者入门
+- <strong>阅读时间</strong>：5-10分钟
+- <strong>内容深度</strong>：概览级别，提供关键信息摘要</p>
+<p><strong>核心内容</strong>：
+- 项目简介和核心特性
+- 技术栈和系统架构概览
+- 快速开始指南和开发环境搭建
+- 完整的文档导航和快速定位</p>
+<h4 id="2-md-">2. <strong>需求说明书.md - 系统需求定义</strong></h4>
+<p><strong>主要作用</strong>：
+- 明确系统建设目标和范围
+- 定义功能需求和非功能需求
+- 制定验收标准和约束条件</p>
+<p><strong>功能定位</strong>：
+- <strong>目标用户</strong>：产品经理、项目经理、需求分析师
+- <strong>阅读时间</strong>：15-30分钟
+- <strong>内容深度</strong>：需求级别，明确系统要做什么</p>
+<p><strong>核心内容</strong>：
+- 项目背景、目标和价值
+- 详细的功能需求描述
+- 性能、安全、可靠性等非功能需求
+- 技术、法律、业务约束条件
+- 明确的验收标准和指标</p>
+<h4 id="3-md-">3. <strong>概要设计说明书.md - 系统架构设计</strong></h4>
+<p><strong>主要作用</strong>：
+- 设计系统整体架构和模块划分
+- 定义模块间接口和数据流
+- 制定技术方案和设计原则</p>
+<p><strong>功能定位</strong>：
+- <strong>目标用户</strong>：系统架构师、技术负责人、高级开发者
+- <strong>阅读时间</strong>：30-60分钟
+- <strong>内容深度</strong>：架构级别，明确系统怎么做</p>
+<p><strong>核心内容</strong>：
+- 系统整体架构图和分层设计
+- 各功能模块的职责划分和接口定义
+- 数据流设计和业务流程
+- 安全设计和性能优化策略
+- 技术选型和实现方案</p>
+<h4 id="4-md-">4. <strong>详细设计说明书.md - 具体实现设计</strong></h4>
+<p><strong>主要作用</strong>：
+- 提供具体的实现细节和代码结构
+- 定义算法实现和数据结构
+- 制定测试策略和部署方案</p>
+<p><strong>功能定位</strong>：
+- <strong>目标用户</strong>：开发工程师、测试工程师、运维工程师
+- <strong>阅读时间</strong>：60-120分钟
+- <strong>内容深度</strong>：实现级别，明确具体如何实现</p>
+<p><strong>核心内容</strong>：
+- 密码学算法的具体实现
+- 智能合约的完整代码结构
+- WebAssembly模块的实现细节
+- 客户端SDK的接口定义
+- 测试用例和部署配置</p>
+<h4 id="5-">5. <strong>技术选型目录 - 技术方案集合</strong></h4>
+<p><strong>主要作用</strong>：
+- 提供完整的技术选型文档
+- 详细的技术实现方案
+- 技术架构和设计思路</p>
+<p><strong>功能定位</strong>：
+- <strong>目标用户</strong>：技术架构师、高级开发者、技术决策者
+- <strong>阅读时间</strong>：根据具体文档而定
+- <strong>内容深度</strong>：技术级别，提供技术实现指导</p>
+<p><strong>核心内容</strong>：
+- <strong>技术脉络总结.md</strong>：技术架构和实现方案总览
+- <strong>多目标选择技术实现方案.md</strong>：多目标选择系统详细设计
+- <strong>多应用场景支持设计说明书.md</strong>：多应用场景技术架构
+- <strong>IPFS存储策略设计说明书.md</strong>：去中心化存储方案
+- <strong>iAgent自动化功能设计说明书.md</strong>：自动化功能设计
+- <strong>Rust智能合约开发指南.md</strong>：智能合约开发指南</p>
+<h3 id="_23">🔄 文档间的相互关系</h3>
+<h4 id="1">1. <strong>依赖关系</strong></h4>
+<div class="codehilite"><pre><span></span><code>需求说明书 → 概要设计说明书 → 详细设计说明书
+     ↓              ↓              ↓
+技术选型文档 ← 技术脉络总结 ← 具体技术实现
+</code></pre></div>
+
+<p><strong>说明</strong>：
+- 需求说明书是设计的基础，概要设计说明书基于需求进行架构设计
+- 详细设计说明书基于概要设计进行具体实现设计
+- 技术选型文档为各阶段设计提供技术支撑</p>
+<h4 id="2">2. <strong>引用关系</strong></h4>
+<ul>
+<li><strong>项目总览.md</strong>：引用所有其他文档，提供完整项目视图</li>
+<li><strong>README.md</strong>：引用项目总览获取详细信息，引用技术选型获取技术细节</li>
+<li><strong>概要设计说明书.md</strong>：引用需求说明书确认需求，引用技术选型确定技术方案</li>
+<li><strong>详细设计说明书.md</strong>：引用概要设计说明书确认架构，引用技术选型实现具体功能</li>
+</ul>
+<h4 id="3">3. <strong>互补关系</strong></h4>
+<ul>
+<li><strong>README.md</strong> vs <strong>项目总览.md</strong>：快速入门 vs 详细概述</li>
+<li><strong>需求说明书.md</strong> vs <strong>概要设计说明书.md</strong>：做什么 vs 怎么做</li>
+<li><strong>概要设计说明书.md</strong> vs <strong>详细设计说明书.md</strong>：架构设计 vs 具体实现</li>
+<li><strong>技术脉络总结.md</strong> vs <strong>具体技术文档</strong>：技术概览 vs 技术细节</li>
+</ul>
+<h3 id="_24">📖 文档使用建议</h3>
+<h4 id="1_1">1. <strong>新用户阅读路径</strong></h4>
+<div class="codehilite"><pre><span></span><code>README.md → 项目总览.md → 需求说明书.md → 概要设计说明书.md
+</code></pre></div>
+
+<p><strong>说明</strong>：从快速入门开始，逐步深入了解项目全貌、需求定义和架构设计</p>
+<h4 id="2_1">2. <strong>开发者阅读路径</strong></h4>
+<div class="codehilite"><pre><span></span><code>README.md → 技术选型/技术脉络总结.md → 概要设计说明书.md → 详细设计说明书.md
+</code></pre></div>
+
+<p><strong>说明</strong>：从技术概览开始，了解系统架构，深入具体实现细节</p>
+<h4 id="3_1">3. <strong>技术决策者阅读路径</strong></h4>
+<div class="codehilite"><pre><span></span><code>项目总览.md → 技术选型/技术脉络总结.md → 概要设计说明书.md
+</code></pre></div>
+
+<p><strong>说明</strong>：从项目整体了解开始，重点关注技术架构和实现方案</p>
+<h4 id="4">4. <strong>项目经理阅读路径</strong></h4>
+<div class="codehilite"><pre><span></span><code>README.md → 项目总览.md → 需求说明书.md → 开发计划
+</code></pre></div>
+
+<p><strong>说明</strong>：从项目概览开始，重点关注需求定义和开发计划</p>
+<h3 id="_25">🔍 文档维护和更新</h3>
+<h4 id="1_2">1. <strong>更新原则</strong></h4>
+<ul>
+<li>需求变更时，优先更新需求说明书</li>
+<li>架构调整时，同步更新概要设计说明书</li>
+<li>技术方案变更时，更新相关技术选型文档</li>
+<li>实现细节变更时，更新详细设计说明书</li>
+</ul>
+<h4 id="2_2">2. <strong>版本控制</strong></h4>
+<ul>
+<li>每个文档都有明确的版本标识</li>
+<li>重大变更需要更新文档版本</li>
+<li>建立文档变更日志和更新记录</li>
+</ul>
+<h4 id="3_2">3. <strong>一致性检查</strong></h4>
+<ul>
+<li>定期检查文档间的一致性</li>
+<li>确保技术方案与架构设计一致</li>
+<li>验证实现细节与需求定义一致</li>
+</ul>
+<h2 id="_26">核心流程</h2>
+<h3 id="nft_2">NFT类型投票配置流程（投票项目属性接口）</h3>
+<ol>
+<li>用户验证$LUCKEE代币持有量</li>
+<li>创建/更新NFT类型全局参数配置（写入IPFS，返回CID/版本）</li>
+<li>设置抽奖等级（如适用，配置写入IPFS，链上仅存CID）</li>
+<li>创建/引用对应的NFT合约</li>
+<li>在链上记录必要的摘要/索引（账户-NFT关联与结果摘要）</li>
+<li>返回配置CID/版本与NFT合约地址</li>
+</ol>
+<h3 id="nft_3">NFT创建和分配流程</h3>
+<ol>
+<li>根据NFT类型全局参数配置创建NFT元数据（元数据与配置引用CID）</li>
+<li>将元数据存储到IPFS</li>
+<li>在NFT合约中铸造NFT</li>
+<li>为NFT分配投票资格</li>
+<li>记录账户与NFT的关联关系与必要的结果摘要</li>
+</ol>
+<h3 id="_27">偏好投票提交流程</h3>
+<ol>
+<li>决策人验证NFT所有权</li>
+<li>选择偏好值（整数）</li>
+<li>客户端生成随机数</li>
+<li>使用比特承诺协议生成偏好投票承诺</li>
+<li>提交承诺到区块链</li>
+<li>存储决策投票详情到IPFS</li>
+<li>返回交易哈希</li>
+</ol>
+<h3 id="_28">偏好投票揭示流程</h3>
+<ol>
+<li>决策投票期结束后</li>
+<li>决策人提交原始偏好值和随机数</li>
+<li>验证偏好投票承诺的正确性</li>
+<li>更新偏好投票统计</li>
+<li>计算最终决策结果（偏好值汇总）</li>
+</ol>
+<h3 id="_29">抽奖结果计算流程</h3>
+<ol>
+<li>收集所有参与者的随机数</li>
+<li>根据抽奖等级配置分配中奖者</li>
+<li>为每个中奖者分配中奖序号</li>
+<li>更新NFT元数据中的中奖信息</li>
+<li>生成抽奖结果证明</li>
+</ol>
+<h3 id="_30">决策结果验证流程</h3>
+<ol>
+<li>获取所有偏好投票承诺</li>
+<li>验证每个偏好投票的有效性</li>
+<li>计算Merkle根</li>
+<li>与链上记录的结果摘要/CID比对</li>
+<li>生成决策结果验证报告</li>
+</ol>
+<h4 id="_31">抽奖场景具体流程</h4>
+<p><strong>抽奖提交流程</strong>：
+1. 抽奖参与者验证NFT所有权
+2. 选择随机数（整数）
+3. 客户端生成随机种子
+4. 使用比特承诺协议生成随机数承诺
+5. 提交承诺到区块链
+6. 存储抽奖活动详情到IPFS
+7. 返回交易哈希</p>
+<p><strong>抽奖揭示流程</strong>：
+1. 抽奖期结束后
+2. 参与者提交原始随机数和随机种子
+3. 验证随机数承诺的正确性
+4. 更新随机数统计
+5. 计算最终抽奖结果（随机数总和对参与者数量取余）</p>
+<p><strong>抽奖结果验证流程</strong>：
+1. 获取所有随机数承诺
+2. 验证每个随机数的有效性
+3. 计算随机数总和
+4. 验证取余计算过程
+5. 生成抽奖结果验证报告
+6. 验证中奖序号分配的正确性</p>
+<h3 id="nft_4">统一NFT决策状态机</h3>
+<p>状态：Draft → CommitOpen → CommitClosed → RevealOpen → Revealed → Tallied → Executed → Archived</p>
+<ul>
+<li>时间参数控制从提交到揭示与执行的开窗；</li>
+<li>状态迁移与审计事件绑定；</li>
+<li>抽奖/彩票/分配/治理等通过NFT类型规则映射到统一状态机。</li>
+</ul>
+<h3 id="nft_5">NFT 决策接口（抽象）</h3>
+<ol>
+<li>提案/会话创建（含NFT类型与时间参数）</li>
+<li>偏好投票提交（承诺）</li>
+<li>隐私保护（比特承诺）</li>
+<li>揭示与计票（单/多目标、竞/非竞）</li>
+<li>决策执行（按NFT类型落地执行）</li>
+</ol>
+<h3 id="_32">多目标选择场景具体流程</h3>
+<p><strong>会话创建流程</strong>：
+1. 系统管理员创建多目标选择会话
+2. 设置参与者数量n和目标数量k
+3. 配置承诺和揭示时间窗口
+4. 创建会话配置并存储到区块链
+5. 返回会话ID和配置信息</p>
+<p><strong>参与者注册流程</strong>：
+1. 参与者验证NFT所有权
+2. 选择k个偏好值（整数）
+3. 配置iAgent自动化参数
+4. 注册到会话中
+5. 等待承诺阶段开始</p>
+<p><strong>自动化承诺流程</strong>：
+1. iAgent自动生成比特承诺
+2. 将承诺存储到IPFS
+3. 提交承诺哈希到区块链
+4. 记录操作日志和状态
+5. 等待揭示阶段触发</p>
+<p><strong>自动化揭示流程</strong>：
+1. 满足揭示条件时自动触发
+2. iAgent揭示所有参与者的真实值
+3. 验证承诺的正确性
+4. 更新会话状态
+5. 进入中奖计算阶段</p>
+<p><strong>中奖计算流程</strong>：
+1. 收集所有参与者的k个值
+2. 计算基准中奖序号A1
+3. 计算偏移中奖序号A2到Ak
+4. 确保所有中奖序号互不相同
+5. 生成计算证明和结果</p>
+<p><strong>结果验证流程</strong>：
+1. 验证所有承诺的正确性
+2. 验证中奖计算过程的正确性
+3. 验证中奖序号的唯一性
+4. 生成完整性验证报告
+5. 支持第三方审计验证</p>
+<h2 id="_33">性能指标</h2>
+<h3 id="_34">系统性能</h3>
+<ul>
+<li><strong>响应时间</strong>：偏好投票操作响应时间 ≤ 3秒</li>
+<li><strong>吞吐量</strong>：支持每秒1000+并发偏好投票操作</li>
+<li><strong>扩展性</strong>：支持百万级决策人规模</li>
+<li><strong>可用性</strong>：系统可用性达到99.9%</li>
+</ul>
+<h3 id="_35">代币验证性能</h3>
+<ul>
+<li><strong>代币查询响应时间</strong>：≤ 1秒</li>
+<li><strong>批量验证支持</strong>：支持1000+用户并发验证</li>
+<li><strong>权限检查延迟</strong>：≤ 500毫秒</li>
+</ul>
+<h3 id="nft_6">NFT操作性能</h3>
+<ul>
+<li><strong>NFT创建时间</strong>：≤ 5秒</li>
+<li><strong>元数据存储时间</strong>：≤ 3秒</li>
+<li><strong>批量操作支持</strong>：支持100+ NFT并发创建</li>
+</ul>
+<h3 id="_36">抽奖系统性能</h3>
+<ul>
+<li><strong>中奖者选择时间</strong>：≤ 10秒（1000参与者）</li>
+<li><strong>中奖序号分配时间</strong>：≤ 5秒</li>
+<li><strong>结果验证时间</strong>：≤ 3秒</li>
+</ul>
+<h3 id="_37">多目标选择系统性能</h3>
+<ul>
+<li><strong>会话创建时间</strong>：≤ 3秒</li>
+<li><strong>参与者注册时间</strong>：≤ 2秒</li>
+<li><strong>承诺处理时间</strong>：≤ 5秒（1000参与者）</li>
+<li><strong>揭示处理时间</strong>：≤ 8秒（1000参与者）</li>
+<li><strong>中奖计算时间</strong>：≤ 10秒（1000参与者，10个目标）</li>
+<li><strong>结果验证时间</strong>：≤ 5秒</li>
+<li><strong>并发支持</strong>：支持10000+参与者同时参与</li>
+</ul>
+<h3 id="_38">安全指标</h3>
+<ul>
+<li><strong>隐私保护</strong>：偏好投票内容对第三方不可见</li>
+<li><strong>数据完整性</strong>：确保偏好投票数据不被篡改</li>
+<li><strong>身份验证</strong>：防止身份伪造和重复投票</li>
+<li><strong>抗攻击性</strong>：抵御常见的网络攻击</li>
+<li><strong>偏好保护</strong>：确保决策人的偏好值在揭示前不被泄露</li>
+<li><strong>防重放攻击</strong>：防止投票被重复提交</li>
+<li><strong>代币安全</strong>：防止代币余额操纵和权限提升</li>
+<li><strong>NFT安全</strong>：防止NFT重复使用和所有权伪造</li>
+<li><strong>多目标选择安全</strong>：防止参与者操纵选择值，确保iAgent操作安全</li>
+</ul>
+<h2 id="_39">开发计划</h2>
+<h3 id="4_1">第一阶段：基础架构（4周）</h3>
+<ul>
+<li>密码学核心模块开发</li>
+<li>WebAssembly服务器基础框架</li>
+<li>区块链智能合约开发</li>
+<li>基础测试框架搭建</li>
+</ul>
+<h3 id="nft6">第二阶段：代币和NFT系统（6周）</h3>
+<ul>
+<li>代币验证模块开发</li>
+<li>NFT管理模块开发</li>
+<li>权限控制系统实现</li>
+<li>智能合约集成测试</li>
+</ul>
+<h3 id="4_2">第三阶段：抽奖等级系统（4周）</h3>
+<ul>
+<li>抽奖等级配置管理</li>
+<li>中奖者选择算法实现</li>
+<li>中奖序号分配系统</li>
+<li>结果验证和审计机制</li>
+</ul>
+<h3 id="6">第四阶段：多目标选择系统（6周）</h3>
+<ul>
+<li>多目标选择算法实现</li>
+<li>iAgent自动化框架</li>
+<li>会话管理和状态机</li>
+<li>结果验证和审计机制</li>
+</ul>
+<h3 id="6_1">第五阶段：核心功能（6周）</h3>
+<ul>
+<li>决策投票生命周期管理</li>
+<li>偏好投票客户端SDK开发</li>
+<li>存储策略实现</li>
+<li>基础安全机制</li>
+</ul>
+<h3 id="4_3">第六阶段：性能优化（4周）</h3>
+<ul>
+<li>WebAssembly性能优化</li>
+<li>缓存策略实现</li>
+<li>并发处理优化</li>
+<li>压力测试和调优</li>
+</ul>
+<h3 id="2_3">第七阶段：集成测试（2周）</h3>
+<ul>
+<li>端到端集成测试</li>
+<li>安全审计</li>
+<li>性能测试</li>
+<li>文档完善</li>
+</ul>
+<h2 id="_40">风险评估</h2>
+<h3 id="_41">技术风险</h3>
+<ul>
+<li><strong>区块链性能瓶颈</strong>：通过优化和分层存储缓解</li>
+<li><strong>密码学算法安全性</strong>：使用成熟的标准算法</li>
+<li><strong>WebAssembly兼容性问题</strong>：充分测试和降级方案</li>
+<li><strong>代币合约安全性</strong>：专业安全审计和测试</li>
+<li><strong>NFT标准兼容性</strong>：遵循CW721标准规范</li>
+</ul>
+<h3 id="_42">业务风险</h3>
+<ul>
+<li><strong>用户接受度</strong>：提供友好的用户界面和详细文档</li>
+<li><strong>监管政策变化</strong>：持续关注合规要求</li>
+<li><strong>竞争环境变化</strong>：保持技术领先优势</li>
+<li><strong>市场推广</strong>：制定有效的市场推广策略</li>
+<li><strong>代币经济模型</strong>：设计合理的代币激励机制</li>
+</ul>
+<h2 id="_43">项目价值</h2>
+<h3 id="_44">技术创新</h3>
+<ul>
+<li>首次将比特承诺协议应用于大规模决策投票系统</li>
+<li>偏好值汇总算法的创新实现</li>
+<li>Rust WebAssembly在区块链应用中的创新应用</li>
+<li>去中心化存储与区块链的深度集成</li>
+<li>代币权限控制与NFT化投票资格的创新结合</li>
+<li>多等级抽奖系统的智能算法设计</li>
+<li>多目标选择系统的公平算法和iAgent自动化</li>
+</ul>
+<h3 id="_45">社会价值</h3>
+<ul>
+<li>为集体决策提供安全、透明、可验证的技术方案</li>
+<li>推动区块链技术在政务和企业决策领域的应用</li>
+<li>提升决策系统的可信度和参与度</li>
+<li>建立公平、透明的抽奖和奖励机制</li>
+<li>促进代币经济的发展和应用</li>
+</ul>
+<h3 id="_46">商业价值</h3>
+<ul>
+<li>为政府和企业提供专业的决策投票解决方案</li>
+<li>建立可扩展的决策投票平台生态</li>
+<li>推动相关技术标准的制定</li>
+<li>创造新的商业模式和收入来源</li>
+<li>建立代币经济生态系统</li>
+</ul>
+<h2 id="_47">总结</h2>
+<p>本项目通过创新的技术架构和严谨的设计文档，构建了一个完整的去中心化决策投票系统解决方案。系统在保证隐私性和安全性的同时，实现了高性能和可扩展性，为大规模决策场景提供了可靠的技术支撑。</p>
+<p>系统集成的代币权限控制、NFT化投票资格管理、多等级选择（多组多目标选择）系统和多目标选择系统，为用户提供了完整、丰富和灵活的投票体验。</p>
+<p>多目标选择系统通过创新的公平选择算法和iAgent自动化，为大规模参与者选择提供了高效、透明、可验证的解决方案。第一期仅用于去中心化抽奖（n选1、n选k），分配、治理等应用场景在后续迭代支持。</p>
+<p>通过需求说明书、概要设计说明书和详细设计说明书的完整文档体系，项目具备了清晰的开发指导和验收标准，为后续的开发实施奠定了坚实的基础。</p>
+<hr>
+<blockquote>
+<p>🔗 <strong>相关文档</strong>：
+- <a href="../README.md">README.md</a> - 项目快速入门和导航指南
+- <a href="技术选型/">技术选型目录</a> - 完整的技术选型文档集合
+- <a href="需求说明书.html">需求说明书</a> - 系统功能需求和非功能需求
+- <a href="概要设计说明书.html">概要设计说明书</a> - 系统架构和模块设计</p>
+</blockquote>
+</body>
+</html>
