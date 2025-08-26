@@ -198,10 +198,6 @@
 <h4 id="234">2.3.4 数据结构</h4>
 <div class="codehilite"><pre><span></span><code><span class="cp">#[derive(Debug, Clone)]</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">ResourceAllocationConfig</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">resource_type</span>: <span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="c1">// 资源类型</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">total_amount</span>: <span class="kt">u64</span><span class="p">,</span><span class="w">     </span><span class="c1">// 总资源数量</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">allocation_algorithm</span>: <span class="nc">AllocationAlgorithm</span><span class="p">,</span><span class="w"> </span><span class="c1">// 分配算法</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">constraints</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Constraint</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="c1">// 约束条件</span>
 <span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">global_state_schema</span>: <span class="nc">StateSchema</span><span class="p">,</span><span class="w"> </span><span class="c1">// 全局状态模式</span>
 <span class="p">}</span>
 
@@ -361,7 +357,7 @@
 <h2 id="_1">评估标准与结论</h2>
 <h3 id="_2">评估标准（统一口径）</h3>
 <ul>
-<li>架构边界：统一“链上最小化 + IPFS（CID/版本为单一真实源）”。</li>
+<li>架构边界：统一"链上最小化 + IPFS（CID/版本为单一真实源）"。</li>
 <li>模块一致性：各NFT类型复用统一状态机/接口/存储策略。</li>
 <li>扩展能力：插件化/模块化新增场景的复杂度可控。</li>
 <li>运维可行性：监控、审计与自动化闭环。</li>
@@ -790,10 +786,6 @@
 <span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="p">(),</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">nft_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">module</span><span class="p">.</span><span class="n">get_nft_type</span><span class="p">();</span>
 
-<span class="w">        </span><span class="c1">// 验证状态模式</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">state_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">module</span><span class="p">.</span><span class="n">get_state_schema</span><span class="p">();</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">state_manager</span><span class="p">.</span><span class="n">validate_state_schema</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state_schema</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-
 <span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">modules</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">nft_type</span><span class="p">,</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
 <span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
 <span class="w">    </span><span class="p">}</span>
@@ -991,10 +983,6 @@
 <span class="w">          </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;number&quot;</span>
 <span class="w">          </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">          </span><span class="nt">is_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;lottery_status&quot;</span>
-<span class="w">          </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;string&quot;</span>
-<span class="w">          </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;created&quot;</span>
-<span class="w">          </span><span class="nt">is_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">state_transitions</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from_state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;created&quot;</span>
 <span class="w">          </span><span class="nt">to_state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;active&quot;</span>
@@ -1190,10 +1178,6 @@
 <span class="w">          </span><span class="nt">to_state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;voting&quot;</span>
 <span class="w">          </span><span class="nt">trigger_condition</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;OnTime&quot;</span>
 <span class="w">          </span><span class="nt">required_permissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;creator&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from_state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;voting&quot;</span>
-<span class="w">          </span><span class="nt">to_state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;executing&quot;</span>
-<span class="w">          </span><span class="nt">trigger_condition</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;OnThreshold&quot;</span>
-<span class="w">          </span><span class="nt">required_permissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;system&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from_state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;executing&quot;</span>
 <span class="w">          </span><span class="nt">to_state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;completed&quot;</span>
 <span class="w">          </span><span class="nt">trigger_condition</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;OnTime&quot;</span>
@@ -1681,5 +1665,8 @@
 <li><strong>比特承诺集成</strong>：NFT状态变量与比特承诺功能的深度集成</li>
 </ol>
 <p>通过本设计，系统成功实现了从传统"应用场景类型"向"NFT类型驱动"的架构转变，完全符合"不同的应用场景是通过不同的NFT类型"的顶层设计思想，为用户提供了更加清晰、统一、可扩展的去中心化投票解决方案。系统通过NFT分发替代用户注册功能，简化了用户参与流程，通过NFT全局状态变量控制比特承诺功能，实现了更加精确和灵活的系统控制。</p>
+<hr>
+<p>最后更新：2025-08<br>
+维护人：luckeedao 技术团队</p>
 </body>
 </html>
