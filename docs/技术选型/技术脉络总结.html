@@ -25,25 +25,27 @@
 </head>
 <body>
 <p>﻿# 基于比特承诺模型的去中心化投票系统 - 技术脉络总结</p>
-<blockquote>
-<p>用词规范：请参阅《<a href="../项目术语表.html">项目术语表</a>》以确保术语统一。</p>
-</blockquote>
-<h2 id="_1">系统概述</h2>
+<p>> 用词规范：请参阅《[项目术语表](../项目术语表.md)》以确保术语统一。</p>
+<br/>
+<h2>系统概述</h2>
+<br/>
 <p>本系统是一个基于比特承诺模型的去中心化决策投票系统，结合Rust WebAssembly高性能计算与区块链技术，支持大规模决策场景。系统通过NFT类型驱动架构，支持多种应用场景，包括去中心化抽奖、去中心化彩票、去中心化分配、去中心化治理等。</p>
-<h2 id="_2">核心技术架构</h2>
-<h3 id="1">1. 基础技术栈</h3>
-<ul>
-<li><strong>后端核心</strong>：Rust + WebAssembly</li>
-<li><strong>区块链平台</strong>：Injective Protocol (CosmWasm)</li>
-<li><strong>智能合约</strong>：Rust (CosmWasm)</li>
-<li><strong>密码学库</strong>：RustCrypto、sha2、rand</li>
-<li><strong>存储方案</strong>：IPFS + 链上哈希验证</li>
-<li><strong>前端框架</strong>：React + TypeScript</li>
-<li><strong>代币标准</strong>：CW20 (CosmWasm代币标准)</li>
-<li><strong>NFT标准</strong>：CW721 (CosmWasm NFT标准)</li>
-</ul>
-<h3 id="2">2. 系统分层架构</h3>
-<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+<br/>
+<h2>核心技术架构</h2>
+<br/>
+<h3>1. 基础技术栈</h3>
+<p>- **后端核心**：Rust + WebAssembly</p>
+<p>- **区块链平台**：Injective Protocol (CosmWasm)</p>
+<p>- **智能合约**：Rust (CosmWasm)</p>
+<p>- **密码学库**：RustCrypto、sha2、rand</p>
+<p>- **存储方案**：IPFS + 链上哈希验证</p>
+<p>- **前端框架**：React + TypeScript</p>
+<p>- **代币标准**：CW20 (CosmWasm代币标准)</p>
+<p>- **NFT标准**：CW721 (CosmWasm NFT标准)</p>
+<br/>
+<h3>2. 系统分层架构</h3>
+<pre><code>
+┌─────────────────────────────────────────────────────────────┐
 │                        表示层                               │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐          │
 │  │ 客户端SDK   │ │ Web界面     │ │ 移动端      │          │
@@ -71,152 +73,168 @@
 │  │ 比特承诺    │ │ 安全协议    │ │ NFT标准     │          │
 │  └─────────────┘ └─────────────┘ └─────────────┘          │
 └─────────────────────────────────────────────────────────────┘
-</code></pre></div>
-
-<h2 id="_3">核心技术特性</h2>
-<h3 id="1-nft">1. NFT类型驱动架构</h3>
-<h4 id="11">1.1 设计理念</h4>
+</code></pre>
+<br/>
+<h2>核心技术特性</h2>
+<br/>
+<h3>1. NFT类型驱动架构</h3>
+<br/>
+<p>#### 1.1 设计理念</p>
 <p>系统采用"不同的应用场景通过不同的NFT类型来实现"的顶层设计思想，通过NFT类型来区分和控制不同的应用场景。</p>
-<h4 id="12">1.2 核心特性</h4>
-<ul>
-<li><strong>NFT类型驱动</strong>：所有应用场景通过不同的NFT类型来定义和区分</li>
-<li><strong>NFT分发替代注册</strong>：使用NFT的分发代替传统的用户注册功能</li>
-<li><strong>NFT状态控制</strong>：NFT存在一个全局的状态变量，用于比特承诺功能的状态控制</li>
-<li><strong>统一框架</strong>：所有NFT类型共享相同的比特承诺和投票机制</li>
-<li><strong>可扩展性</strong>：通过定义新的NFT类型快速集成新应用场景</li>
-</ul>
-<h4 id="13">1.3 支持的应用场景</h4>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">NFTType</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">LotteryActivity</span><span class="p">,</span><span class="w">      </span><span class="c1">// 去中心化抽奖</span>
-<span class="w">    </span><span class="n">LotteryTicket</span><span class="p">,</span><span class="w">        </span><span class="c1">// 去中心化彩票</span>
-<span class="w">    </span><span class="n">ResourceAllocation</span><span class="p">,</span><span class="w">   </span><span class="c1">// 去中心化分配</span>
-<span class="w">    </span><span class="n">GovernanceVote</span><span class="p">,</span><span class="w">       </span><span class="c1">// 去中心化治理</span>
-<span class="w">    </span><span class="n">Custom</span><span class="p">(</span><span class="nb">String</span><span class="p">),</span><span class="w">       </span><span class="c1">// 自定义应用场景</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="2_1">2. 比特承诺协议</h3>
-<h4 id="21">2.1 协议设计</h4>
-<ul>
-<li><strong>承诺阶段</strong>：参与者提交哈希承诺，保护隐私</li>
-<li><strong>揭示阶段</strong>：参与者揭示真实值，验证承诺</li>
-<li><strong>结果计算</strong>：基于所有揭示值计算最终结果</li>
-<li><strong>NFT状态集成</strong>：承诺和揭示过程与NFT状态深度集成</li>
-</ul>
-<h4 id="22">2.2 核心算法</h4>
-<div class="codehilite"><pre><span></span><code><span class="c1">// 承诺计算</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">create_commitment</span><span class="p">(</span>
-<span class="w">    </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">    </span><span class="n">values</span>: <span class="kp">&amp;</span><span class="p">[</span><span class="kt">i64</span><span class="p">],</span>
-<span class="w">    </span><span class="n">nft_state</span>: <span class="kp">&amp;</span><span class="nc">NFTState</span>
-<span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">CommitmentData</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">hasher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sha256</span>::<span class="n">new</span><span class="p">();</span>
-
-<span class="w">    </span><span class="c1">// 拼接所有值</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">values</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">hasher</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">value</span><span class="p">.</span><span class="n">to_be_bytes</span><span class="p">());</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="c1">// 添加NFT状态信息</span>
-<span class="w">    </span><span class="n">hasher</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">nft_state</span><span class="p">.</span><span class="n">current_state</span><span class="p">.</span><span class="n">as_bytes</span><span class="p">());</span>
-<span class="w">    </span><span class="n">hasher</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">.</span><span class="n">timestamp</span><span class="p">.</span><span class="n">to_be_bytes</span><span class="p">());</span>
-<span class="w">    </span><span class="n">hasher</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">.</span><span class="n">randomness</span><span class="p">.</span><span class="n">as_bytes</span><span class="p">());</span>
-
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">hash_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasher</span><span class="p">.</span><span class="n">finalize</span><span class="p">();</span>
-<span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">CommitmentData</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">commitment</span>: <span class="nc">hex</span>::<span class="n">encode</span><span class="p">(</span><span class="n">hash_result</span><span class="p">),</span>
-<span class="w">        </span><span class="n">timestamp</span>: <span class="nc">self</span><span class="p">.</span><span class="n">timestamp</span><span class="p">,</span>
-<span class="w">        </span><span class="n">randomness</span>: <span class="nc">self</span><span class="p">.</span><span class="n">randomness</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">    </span><span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="3">3. 多目标选择系统</h3>
-<h4 id="31">3.1 功能概述</h4>
+<br/>
+<p>#### 1.2 核心特性</p>
+<p>- **NFT类型驱动**：所有应用场景通过不同的NFT类型来定义和区分</p>
+<p>- **NFT分发替代注册**：使用NFT的分发代替传统的用户注册功能</p>
+<p>- **NFT状态控制**：NFT存在一个全局的状态变量，用于比特承诺功能的状态控制</p>
+<p>- **统一框架**：所有NFT类型共享相同的比特承诺和投票机制</p>
+<p>- **可扩展性**：通过定义新的NFT类型快速集成新应用场景</p>
+<br/>
+<p>#### 1.3 支持的应用场景</p>
+<pre><code>
+pub enum NFTType {
+    LotteryActivity,      // 去中心化抽奖
+    LotteryTicket,        // 去中心化彩票
+    ResourceAllocation,   // 去中心化分配
+    GovernanceVote,       // 去中心化治理
+    Custom(String),       // 自定义应用场景
+}
+</code></pre>
+<br/>
+<h3>2. 比特承诺协议</h3>
+<br/>
+<p>#### 2.1 协议设计</p>
+<p>- **承诺阶段**：参与者提交哈希承诺，保护隐私</p>
+<p>- **揭示阶段**：参与者揭示真实值，验证承诺</p>
+<p>- **结果计算**：基于所有揭示值计算最终结果</p>
+<p>- **NFT状态集成**：承诺和揭示过程与NFT状态深度集成</p>
+<br/>
+<p>#### 2.2 核心算法</p>
+<pre><code>
+// 承诺计算
+pub fn create_commitment(
+    &amp;self,
+    values: &amp;[i64],
+    nft_state: &amp;NFTState
+) -&gt; Result&lt;CommitmentData, Error&gt; {
+    let mut hasher = Sha256::new();
+    
+    // 拼接所有值
+    for value in values {
+        hasher.update(&amp;value.to_be_bytes());
+    }
+    
+    // 添加NFT状态信息
+    hasher.update(&amp;nft_state.current_state.as_bytes());
+    hasher.update(&amp;self.timestamp.to_be_bytes());
+    hasher.update(&amp;self.randomness.as_bytes());
+    
+    let hash_result = hasher.finalize();
+    Ok(CommitmentData {
+        commitment: hex::encode(hash_result),
+        timestamp: self.timestamp,
+        randomness: self.randomness.clone(),
+    })
+}
+</code></pre>
+<br/>
+<h3>3. 多目标选择系统</h3>
+<br/>
+<p>#### 3.1 功能概述</p>
 <p>多目标选择系统是一个基于比特承诺模型的公平选择机制，用于从n个参与者中选出k个不同的中奖序号。系统通过iAgent自动化处理承诺和揭示过程，确保公平性和不可篡改性。</p>
-<h4 id="32">3.2 核心算法</h4>
-<div class="codehilite"><pre><span></span><code><span class="c1">// 基准序号计算</span>
-<span class="k">fn</span> <span class="nf">calculate_base_winner</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">participants</span>: <span class="kp">&amp;</span><span class="p">[</span><span class="n">ParticipantData</span><span class="p">])</span><span class="w"> </span>-&gt; <span class="kt">u32</span> <span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">total_sum</span>: <span class="kt">i64</span> <span class="o">=</span><span class="w"> </span><span class="n">participants</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">p</span><span class="o">|</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">random_number</span><span class="p">).</span><span class="n">sum</span><span class="p">();</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">participant_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">participants</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u64</span><span class="p">;</span>
-<span class="w">    </span><span class="p">((</span><span class="n">total_sum</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">participant_count</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i64</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u32</span>
-<span class="p">}</span>
+<br/>
+<p>#### 3.2 核心算法</p>
+<pre><code>
+// 基准序号计算
+fn calculate_base_winner(&amp;self, participants: &amp;[ParticipantData]) -&gt; u32 {
+    let total_sum: i64 = participants.iter().map(|p| p.random_number).sum();
+    let participant_count = participants.len() as u64;
+    ((total_sum % participant_count as i64) + 1) as u32
+}
 
-<span class="c1">// 偏移序号计算</span>
-<span class="k">fn</span> <span class="nf">calculate_offset_winner</span><span class="p">(</span>
-<span class="w">    </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">    </span><span class="n">base_winner</span>: <span class="kt">u32</span><span class="p">,</span>
-<span class="w">    </span><span class="n">offset</span>: <span class="kt">u32</span><span class="p">,</span>
-<span class="w">    </span><span class="n">used_winners</span>: <span class="kp">&amp;</span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">    </span><span class="n">participant_count</span>: <span class="kt">u32</span>
-<span class="p">)</span><span class="w"> </span>-&gt; <span class="kt">u32</span> <span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">candidate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">base_winner</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">offset</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">participant_count</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">candidate</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">candidate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">participant_count</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="c1">// 防冲突机制</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">attempts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="n">used_winners</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="o">&amp;</span><span class="n">candidate</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">attempts</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">participant_count</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">candidate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">candidate</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">participant_count</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">attempts</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="n">candidate</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h4 id="33-iagent">3.3 iAgent自动化（服务于抽奖/彩票中的多目标选择模式）</h4>
-<ul>
-<li><strong>自动化承诺</strong>：iAgent自动生成和提交比特承诺</li>
-<li><strong>自动化揭示</strong>：iAgent自动揭示参与者的真实值</li>
-<li><strong>批量操作</strong>：支持批量承诺和揭示处理</li>
-<li><strong>智能调度</strong>：支持定时、条件触发等多种策略</li>
-</ul>
-<h3 id="4">4. 多应用场景支持</h3>
-<h4 id="41-nft">4.1 抽奖活动NFT类型</h4>
-<p><strong>NFT类型标识</strong>：<code>lottery_activity</code>
-<strong>应用场景</strong>：去中心化抽奖系统</p>
-<p><strong>核心流程（与多目标关系）</strong>：
-1. <strong>NFT分发</strong>：系统通过分发抽奖NFT来管理参与者
-2. <strong>随机数提交</strong>：每个NFT持有者提交整数作为随机数
-3. <strong>结果计算</strong>：累加所有随机数，对参与者总数取余得到结果
-4. <strong>中奖分配</strong>：根据抽奖等级配置分配中奖者和奖品</p>
-<blockquote>
-<p>关系：唯一中奖相当于 n 选 1；多等级选择（多组多目标选择）是多个 n 选 k 的组合，每个等级对应一组偏好值与规则。</p>
-</blockquote>
-<h4 id="42-nft">4.2 彩票NFT类型</h4>
-<p><strong>NFT类型标识</strong>：<code>lottery_ticket</code>
-<strong>应用场景</strong>：去中心化彩票系统</p>
-<p><strong>核心流程</strong>：
-1. <strong>彩票NFT分发</strong>：用户获得彩票NFT
-2. <strong>幸运数字提交</strong>：彩票NFT持有者提交偏好值
-3. <strong>开奖机制</strong>：基于所有幸运数字生成开奖号码
-4. <strong>中奖验证</strong>：自动验证中奖彩票并分配奖金</p>
-<h4 id="43-nft">4.3 资源分配NFT类型</h4>
-<p><strong>NFT类型标识</strong>：<code>resource_allocation</code>
-<strong>应用场景</strong>：去中心化资源分配</p>
-<p><strong>核心流程（按资源属性）</strong>：
-1. <strong>资源NFT分发</strong>：参与者获得资源分配NFT
-2. <strong>偏好提交</strong>：参与者提交资源偏好
-3. <strong>分配计算</strong>：基于偏好和约束条件计算最优分配
-4. <strong>结果执行</strong>：自动执行资源分配结果</p>
-<blockquote>
-<p>类型区分：竞用性（有限排他） vs 非竞用性（非排他可并行满足）。</p>
-</blockquote>
-<h4 id="44-nft">4.4 治理投票NFT类型</h4>
-<p><strong>NFT类型标识</strong>：<code>governance_vote</code>
-<strong>应用场景</strong>：去中心化治理投票</p>
-<p><strong>核心流程</strong>：
-1. <strong>治理NFT分发</strong>：治理参与者获得投票NFT
-2. <strong>提案投票</strong>：参与者对治理提案进行投票
-3. <strong>结果统计</strong>：统计投票结果并计算最终决策
-4. <strong>决策执行</strong>：自动执行通过的治理决策</p>
-<h3 id="5-ipfs">5. IPFS存储策略</h3>
-<h4 id="51">5.1 设计目标</h4>
-<p>本系统采用<strong>IPFS（InterPlanetary File System）</strong>作为主要存储方案，完全替代传统的"链下存储"概念。通过IPFS的去中心化特性，实现数据的高可用性、不可篡改性和成本效益的完美平衡。</p>
-<h4 id="52">5.2 存储架构</h4>
-<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+// 偏移序号计算
+fn calculate_offset_winner(
+    &amp;self,
+    base_winner: u32,
+    offset: u32,
+    used_winners: &amp;HashSet&lt;u32&gt;,
+    participant_count: u32
+) -&gt; u32 {
+    let mut candidate = (base_winner + offset) % participant_count;
+    if candidate == 0 {
+        candidate = participant_count;
+    }
+    
+    // 防冲突机制
+    let mut attempts = 0;
+    while used_winners.contains(&amp;candidate) &amp;&amp; attempts &lt; participant_count {
+        candidate = (candidate % participant_count) + 1;
+        attempts += 1;
+    }
+    
+    candidate
+}
+</code></pre>
+<br/>
+<p>#### 3.3 iAgent自动化（服务于抽奖/彩票中的多目标选择模式）</p>
+<p>- **自动化承诺**：iAgent自动生成和提交比特承诺</p>
+<p>- **自动化揭示**：iAgent自动揭示参与者的真实值</p>
+<p>- **批量操作**：支持批量承诺和揭示处理</p>
+<p>- **智能调度**：支持定时、条件触发等多种策略</p>
+<br/>
+<h3>4. 多应用场景支持</h3>
+<br/>
+<p>#### 4.1 抽奖活动NFT类型</p>
+<p>**NFT类型标识**：`lottery_activity`</p>
+<p>**应用场景**：去中心化抽奖系统</p>
+<br/>
+<p>**核心流程（与多目标关系）**：</p>
+<p>1. **NFT分发**：系统通过分发抽奖NFT来管理参与者</p>
+<p>2. **随机数提交**：每个NFT持有者提交整数作为随机数</p>
+<p>3. **结果计算**：累加所有随机数，对参与者总数取余得到结果</p>
+<p>4. **中奖分配**：根据抽奖等级配置分配中奖者和奖品</p>
+<br/>
+<p>> 关系：唯一中奖相当于 n 选 1；多等级选择（多组多目标选择）是多个 n 选 k 的组合，每个等级对应一组偏好值与规则。</p>
+<br/>
+<p>#### 4.2 彩票NFT类型</p>
+<p>**NFT类型标识**：`lottery_ticket`</p>
+<p>**应用场景**：去中心化彩票系统</p>
+<br/>
+<p>**核心流程**：</p>
+<p>1. **彩票NFT分发**：用户获得彩票NFT</p>
+<p>2. **幸运数字提交**：彩票NFT持有者提交偏好值</p>
+<p>3. **开奖机制**：基于所有幸运数字生成开奖号码</p>
+<p>4. **中奖验证**：自动验证中奖彩票并分配奖金</p>
+<br/>
+<p>#### 4.3 资源分配NFT类型</p>
+<p>**NFT类型标识**：`resource_allocation`</p>
+<p>**应用场景**：去中心化资源分配</p>
+<br/>
+<p>**核心流程（按资源属性）**：</p>
+<p>1. **资源NFT分发**：参与者获得资源分配NFT</p>
+<p>2. **偏好提交**：参与者提交资源偏好</p>
+<p>3. **分配计算**：基于偏好和约束条件计算最优分配</p>
+<p>4. **结果执行**：自动执行资源分配结果</p>
+<br/>
+<p>> 类型区分：竞用性（有限排他） vs 非竞用性（非排他可并行满足）。</p>
+<br/>
+<p>#### 4.4 治理投票NFT类型</p>
+<p>**NFT类型标识**：`governance_vote`</p>
+<p>**应用场景**：去中心化治理投票</p>
+<br/>
+<p>**核心流程**：</p>
+<p>1. **治理NFT分发**：治理参与者获得投票NFT</p>
+<p>2. **提案投票**：参与者对治理提案进行投票</p>
+<p>3. **结果统计**：统计投票结果并计算最终决策</p>
+<p>4. **决策执行**：自动执行通过的治理决策</p>
+<br/>
+<h3>5. IPFS存储策略</h3>
+<br/>
+<p>#### 5.1 设计目标</p>
+<p>本系统采用**IPFS（InterPlanetary File System）**作为主要存储方案，完全替代传统的"链下存储"概念。通过IPFS的去中心化特性，实现数据的高可用性、不可篡改性和成本效益的完美平衡。</p>
+<br/>
+<p>#### 5.2 存储架构</p>
+<pre><code>
+┌─────────────────────────────────────────────────────────────┐
 │                    客户端应用层                              │
 └─────────────────────┬───────────────────────────────────────┘
                       │
@@ -240,35 +258,39 @@
 │  │ 数据哈希    │ │ 存储证明    │ │ 访问控制    │          │
 │  └─────────────┘ └─────────────┘ └─────────────┘          │
 └─────────────────────────────────────────────────────────────┘
-</code></pre></div>
+</code></pre>
+<br/>
+<p>#### 5.3 核心数据结构</p>
+<pre><code>
+#[derive(Debug, Clone)]
+pub struct IPFSConfig {
+    pub gateway_urls: Vec&lt;String&gt;,           // 公共网关列表
+    pub local_node: Option&lt;LocalIPFSNode&gt;,   // 本地节点配置
+    pub pinning_services: Vec&lt;PinningService&gt;, // 固定服务配置
+    pub redundancy_factor: u32,              // 冗余因子
+    pub data_retention_days: u32,            // 数据保留天数
+    pub compression_enabled: bool,           // 是否启用压缩
+    pub encryption_enabled: bool,            // 是否启用加密
+}
 
-<h4 id="53">5.3 核心数据结构</h4>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[derive(Debug, Clone)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">IPFSConfig</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">gateway_urls</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span><span class="w">           </span><span class="c1">// 公共网关列表</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">local_node</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="n">LocalIPFSNode</span><span class="o">&gt;</span><span class="p">,</span><span class="w">   </span><span class="c1">// 本地节点配置</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">pinning_services</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">PinningService</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="c1">// 固定服务配置</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">redundancy_factor</span>: <span class="kt">u32</span><span class="p">,</span><span class="w">              </span><span class="c1">// 冗余因子</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">data_retention_days</span>: <span class="kt">u32</span><span class="p">,</span><span class="w">            </span><span class="c1">// 数据保留天数</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">compression_enabled</span>: <span class="kt">bool</span><span class="p">,</span><span class="w">           </span><span class="c1">// 是否启用压缩</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">encryption_enabled</span>: <span class="kt">bool</span><span class="p">,</span><span class="w">            </span><span class="c1">// 是否启用加密</span>
-<span class="p">}</span>
-
-<span class="cp">#[derive(Debug, Clone)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">IPFSStorageResult</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">content_hash</span>: <span class="nb">String</span><span class="p">,</span><span class="w">                </span><span class="c1">// IPFS内容哈希</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">size_bytes</span>: <span class="kt">u64</span><span class="p">,</span><span class="w">                    </span><span class="c1">// 文件大小</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">storage_nodes</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span><span class="w">          </span><span class="c1">// 存储节点列表</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">pin_status</span>: <span class="nc">PinStatus</span><span class="p">,</span><span class="w">               </span><span class="c1">// 固定状态</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">access_urls</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span><span class="w">            </span><span class="c1">// 访问URL列表</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="6-iagent">6. iAgent自动化功能</h3>
-<h4 id="61">6.1 设计目标</h4>
+#[derive(Debug, Clone)]
+pub struct IPFSStorageResult {
+    pub content_hash: String,                // IPFS内容哈希
+    pub size_bytes: u64,                    // 文件大小
+    pub storage_nodes: Vec&lt;String&gt;,          // 存储节点列表
+    pub pin_status: PinStatus,               // 固定状态
+    pub access_urls: Vec&lt;String&gt;,            // 访问URL列表
+}
+</code></pre>
+<br/>
+<h3>6. iAgent自动化功能</h3>
+<br/>
+<p>#### 6.1 设计目标</p>
 <p>通过iAgent实现比特承诺模型的自动化承诺与揭示流程，确保用户设置之后可以自动化的实现承诺与揭示操作，减少人工干预，提高系统效率和用户体验。</p>
-<h4 id="62">6.2 系统架构</h4>
-<div class="codehilite"><pre><span></span><code>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+<br/>
+<p>#### 6.2 系统架构</p>
+<pre><code>
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   用户配置层    │    │   iAgent核心层   │    │   执行引擎层    │
 │                 │    │                 │    │                 │
 │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
@@ -277,43 +299,45 @@
 │ │ 执行策略    │ │    │ │ 任务调度器  │ │    │ │ 批量处理器  │ │
 │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-</code></pre></div>
+</code></pre>
+<br/>
+<p>#### 6.3 核心数据结构</p>
+<pre><code>
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct IAgentConfig {
+    pub agent_id: String,                    // 代理唯一标识
+    pub automation_enabled: bool,            // 是否启用自动化
+    pub auto_commit_interval: Option&lt;u64&gt;,  // 自动承诺间隔（秒）
+    pub auto_reveal_delay: Option&lt;u64&gt;,     // 自动揭示延迟（秒）
+    pub commitment_strategy: CommitmentStrategy, // 承诺策略
+    pub reveal_conditions: Vec&lt;RevealCondition&gt;, // 揭示条件
+    pub batch_size: Option&lt;u32&gt;,            // 批量处理大小
+    pub smart_timing: bool,                 // 是否启用智能定时
+    pub retry_config: RetryConfig,          // 重试配置
+    pub security_config: SecurityConfig,    // 安全配置
+}
 
-<h4 id="63">6.3 核心数据结构</h4>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[derive(Debug, Clone, Serialize, Deserialize)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">IAgentConfig</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">agent_id</span>: <span class="nb">String</span><span class="p">,</span><span class="w">                    </span><span class="c1">// 代理唯一标识</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">automation_enabled</span>: <span class="kt">bool</span><span class="p">,</span><span class="w">            </span><span class="c1">// 是否启用自动化</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">auto_commit_interval</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// 自动承诺间隔（秒）</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">auto_reveal_delay</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span><span class="w">     </span><span class="c1">// 自动揭示延迟（秒）</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">commitment_strategy</span>: <span class="nc">CommitmentStrategy</span><span class="p">,</span><span class="w"> </span><span class="c1">// 承诺策略</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">reveal_conditions</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">RevealCondition</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="c1">// 揭示条件</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">batch_size</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span><span class="w">            </span><span class="c1">// 批量处理大小</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">smart_timing</span>: <span class="kt">bool</span><span class="p">,</span><span class="w">                 </span><span class="c1">// 是否启用智能定时</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">retry_config</span>: <span class="nc">RetryConfig</span><span class="p">,</span><span class="w">          </span><span class="c1">// 重试配置</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">security_config</span>: <span class="nc">SecurityConfig</span><span class="p">,</span><span class="w">    </span><span class="c1">// 安全配置</span>
-<span class="p">}</span>
-
-<span class="cp">#[derive(Debug, Clone, Serialize, Deserialize)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">CommitmentStrategy</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Immediate</span><span class="p">,</span><span class="w">      </span><span class="c1">// 立即执行</span>
-<span class="w">    </span><span class="n">Scheduled</span><span class="p">,</span><span class="w">      </span><span class="c1">// 定时执行</span>
-<span class="w">    </span><span class="n">Conditional</span><span class="p">,</span><span class="w">    </span><span class="c1">// 条件触发</span>
-<span class="w">    </span><span class="n">Batch</span><span class="p">,</span><span class="w">          </span><span class="c1">// 批量处理</span>
-<span class="w">    </span><span class="n">Adaptive</span><span class="p">,</span><span class="w">       </span><span class="c1">// 自适应策略</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="7-rust">7. Rust智能合约开发</h3>
-<h4 id="71">7.1 技术栈</h4>
-<ul>
-<li><strong>开发语言</strong>：Rust</li>
-<li><strong>智能合约框架</strong>：CosmWasm</li>
-<li><strong>区块链平台</strong>：Injective Protocol</li>
-<li><strong>开发工具</strong>：cargo, wasm-pack, cosmwasm-check</li>
-</ul>
-<h4 id="72">7.2 项目结构</h4>
-<div class="codehilite"><pre><span></span><code>decision-voting-contract/
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum CommitmentStrategy {
+    Immediate,      // 立即执行
+    Scheduled,      // 定时执行
+    Conditional,    // 条件触发
+    Batch,          // 批量处理
+    Adaptive,       // 自适应策略
+}
+</code></pre>
+<br/>
+<h3>7. Rust智能合约开发</h3>
+<br/>
+<p>#### 7.1 技术栈</p>
+<p>- **开发语言**：Rust</p>
+<p>- **智能合约框架**：CosmWasm</p>
+<p>- **区块链平台**：Injective Protocol</p>
+<p>- **开发工具**：cargo, wasm-pack, cosmwasm-check</p>
+<br/>
+<p>#### 7.2 项目结构</p>
+<pre><code>
+decision-voting-contract/
 ├── Cargo.toml                 # 项目配置
 ├── src/
 │   ├── contract.rs            # 合约入口点
@@ -324,38 +348,41 @@
 ├── schema/                    # JSON Schema生成
 ├── tests/                     # 测试文件
 └── examples/                  # 示例代码
-</code></pre></div>
-
-<h4 id="73">7.3 核心消息定义</h4>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]</span>
-<span class="cp">#[serde(rename_all = </span><span class="s">&quot;snake_case&quot;</span><span class="cp">)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">ExecuteMsg</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">CreateDecisionVote</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">title</span>: <span class="nb">String</span><span class="p">,</span>
-<span class="w">        </span><span class="n">description</span>: <span class="nb">String</span><span class="p">,</span>
-<span class="w">        </span><span class="n">min_preference</span>: <span class="kt">i32</span><span class="p">,</span>
-<span class="w">        </span><span class="n">max_preference</span>: <span class="kt">i32</span><span class="p">,</span>
-<span class="w">        </span><span class="n">start_time</span>: <span class="kt">u64</span><span class="p">,</span>
-<span class="w">        </span><span class="n">end_time</span>: <span class="kt">u64</span><span class="p">,</span>
-<span class="w">        </span><span class="n">max_votes</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">min_votes</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">is_lottery</span>: <span class="kt">bool</span><span class="p">,</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="n">SubmitPreferenceCommitment</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">decision_vote_id</span>: <span class="nb">String</span><span class="p">,</span>
-<span class="w">        </span><span class="n">commitment</span>: <span class="nb">String</span><span class="p">,</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="n">RevealPreferenceVote</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">decision_vote_id</span>: <span class="nb">String</span><span class="p">,</span>
-<span class="w">        </span><span class="n">preference</span>: <span class="kt">i32</span><span class="p">,</span>
-<span class="w">        </span><span class="n">randomness</span>: <span class="nb">String</span><span class="p">,</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2 id="_4">系统集成架构</h2>
-<h3 id="1_1">1. 模块间交互</h3>
-<div class="codehilite"><pre><span></span><code>┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+</code></pre>
+<br/>
+<p>#### 7.3 核心消息定义</p>
+<pre><code>
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ExecuteMsg {
+    CreateDecisionVote {
+        title: String,
+        description: String,
+        min_preference: i32,
+        max_preference: i32,
+        start_time: u64,
+        end_time: u64,
+        max_votes: Option&lt;u64&gt;,
+        min_votes: Option&lt;u64&gt;,
+        is_lottery: bool,
+    },
+    SubmitPreferenceCommitment {
+        decision_vote_id: String,
+        commitment: String,
+    },
+    RevealPreferenceVote {
+        decision_vote_id: String,
+        preference: i32,
+        randomness: String,
+    },
+}
+</code></pre>
+<br/>
+<h2>系统集成架构</h2>
+<br/>
+<h3>1. 模块间交互</h3>
+<pre><code>
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
 │  代币验证   │◄──►│  权限控制   │◄──►│  投票管理   │
 └─────────────┘    └─────────────┘    └─────────────┘
        │                   │                   │
@@ -368,205 +395,194 @@
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
 │ 多目标选择  │◄──►│ iAgent自动化│◄──►│ 多应用场景  │
 └─────────────┘    └─────────────┘    └─────────────┘
-</code></pre></div>
-
-<h3 id="2_2">2. 数据流设计</h3>
-<ol>
-<li><strong>用户注册</strong> → 代币验证 → 权限分配</li>
-<li><strong>项目创建</strong> → NFT创建 → 元数据存储</li>
-<li><strong>投票参与</strong> → NFT验证 → 投票提交</li>
-<li><strong>抽奖执行</strong> → 中奖者选择 → 序号分配</li>
-<li><strong>结果验证</strong> → 完整性检查 → 审计记录</li>
-</ol>
-<h3 id="3_1">3. 智能合约集成</h3>
-<ul>
-<li><strong>代币合约</strong>：CW20标准，管理$LUCKEE代币</li>
-<li><strong>NFT合约</strong>：CW721标准，管理投票资格NFT</li>
-<li><strong>投票合约</strong>：基于NFT类型全局参数配置驱动投票流程；链上仅记录账户-NFT关联与结果摘要/CID</li>
-<li><strong>权限合约</strong>：管理用户权限和等级</li>
-</ul>
-<h2 id="_5">性能优化策略</h2>
-<h3 id="1_2">1. 计算优化</h3>
-<ul>
-<li><strong>WebAssembly</strong>：高性能Rust代码编译</li>
-<li><strong>并行处理</strong>：支持大规模并发操作</li>
-<li><strong>算法优化</strong>：高效的中奖算法和序号分配</li>
-</ul>
-<h3 id="2_3">2. 存储优化</h3>
-<ul>
-<li><strong>分层存储</strong>：链上哈希 + IPFS元数据</li>
-<li><strong>批量操作</strong>：支持批量NFT创建和序号分配</li>
-<li><strong>缓存策略</strong>：多层缓存减少重复计算</li>
-</ul>
-<h3 id="3_2">3. 网络优化</h3>
-<ul>
-<li><strong>异步处理</strong>：非阻塞API调用</li>
-<li><strong>连接池</strong>：区块链连接复用</li>
-<li><strong>负载均衡</strong>：多节点负载分发</li>
-</ul>
-<h2 id="_6">安全机制设计</h2>
-<h3 id="1_3">1. 密码学安全</h3>
-<ul>
-<li><strong>比特承诺</strong>：保护投票隐私</li>
-<li><strong>哈希验证</strong>：确保数据完整性</li>
-<li><strong>数字签名</strong>：身份认证和防篡改</li>
-</ul>
-<h3 id="2_4">2. 代币安全</h3>
-<ul>
-<li><strong>余额验证</strong>：防止代币余额操纵</li>
-<li><strong>权限控制</strong>：防止权限提升攻击</li>
-<li><strong>合约安全</strong>：专业安全审计</li>
-</ul>
-<h3 id="3-nft">3. NFT安全</h3>
-<ul>
-<li><strong>所有权验证</strong>：防止NFT重复使用</li>
-<li><strong>元数据安全</strong>：IPFS哈希验证</li>
-<li><strong>转移控制</strong>：安全的NFT转移机制</li>
-</ul>
-<h3 id="4_1">4. 抽奖安全</h3>
-<ul>
-<li><strong>算法公平性</strong>：可验证的公平算法</li>
-<li><strong>结果防篡改</strong>：区块链不可篡改存储</li>
-<li><strong>审计机制</strong>：完整的操作审计日志</li>
-</ul>
-<h2 id="_7">测试策略</h2>
-<h3 id="1_4">1. 单元测试</h3>
-<ul>
-<li><strong>算法测试</strong>：中奖算法和序号分配测试</li>
-<li><strong>合约测试</strong>：智能合约功能测试</li>
-<li><strong>模块测试</strong>：各功能模块独立测试</li>
-</ul>
-<h3 id="2_5">2. 集成测试</h3>
-<ul>
-<li><strong>端到端测试</strong>：完整业务流程测试</li>
-<li><strong>性能测试</strong>：大规模并发测试</li>
-<li><strong>安全测试</strong>：安全漏洞扫描测试</li>
-</ul>
-<h3 id="3_3">3. 压力测试</h3>
-<ul>
-<li><strong>并发测试</strong>：高并发场景测试</li>
-<li><strong>负载测试</strong>：系统负载能力测试</li>
-<li><strong>稳定性测试</strong>：长期运行稳定性测试</li>
-</ul>
-<h2 id="_8">部署架构</h2>
-<h3 id="1_5">1. 开发环境</h3>
-<ul>
-<li><strong>Docker容器化</strong>：统一开发环境</li>
-<li><strong>本地区块链</strong>：Injective本地节点</li>
-<li><strong>IPFS节点</strong>：本地IPFS开发环境</li>
-</ul>
-<h3 id="2_6">2. 测试环境</h3>
-<ul>
-<li><strong>测试网部署</strong>：Injective测试网</li>
-<li><strong>自动化测试</strong>：CI/CD流水线</li>
-<li><strong>监控告警</strong>：系统监控和告警</li>
-</ul>
-<h3 id="3_4">3. 生产环境</h3>
-<ul>
-<li><strong>主网部署</strong>：Injective主网</li>
-<li><strong>负载均衡</strong>：多节点负载分发</li>
-<li><strong>备份恢复</strong>：数据备份和灾难恢复</li>
-</ul>
-<h2 id="_9">技术风险与缓解</h2>
-<h3 id="1_6">1. 技术风险</h3>
-<ul>
-<li><strong>区块链性能</strong>：通过优化和分层存储缓解</li>
-<li><strong>算法安全性</strong>：使用成熟的标准算法</li>
-<li><strong>合约安全</strong>：专业安全审计和测试</li>
-<li><strong>WebAssembly兼容性</strong>：充分测试，提供降级方案，使用polyfill</li>
-</ul>
-<h3 id="2_7">2. 业务风险</h3>
-<ul>
-<li><strong>用户接受度</strong>：友好的用户界面和详细文档</li>
-<li><strong>监管合规</strong>：持续关注合规要求</li>
-<li><strong>市场竞争</strong>：保持技术领先优势</li>
-</ul>
-<h3 id="3_5">3. 缓解措施</h3>
-<ul>
-<li><strong>技术验证</strong>：充分的技术方案验证</li>
-<li><strong>安全审计</strong>：定期的安全审计和测试</li>
-<li><strong>用户反馈</strong>：及时响应用户反馈和需求</li>
-<li><strong>渐进式部署</strong>：先在测试环境验证，小规模用户试用，逐步扩大用户规模</li>
-</ul>
-<h2 id="_10">文档一致性说明</h2>
-<h3 id="_11">跨文档技术一致性</h3>
+</code></pre>
+<br/>
+<h3>2. 数据流设计</h3>
+<p>1. **用户注册** → 代币验证 → 权限分配</p>
+<p>2. **项目创建** → NFT创建 → 元数据存储</p>
+<p>3. **投票参与** → NFT验证 → 投票提交</p>
+<p>4. **抽奖执行** → 中奖者选择 → 序号分配</p>
+<p>5. **结果验证** → 完整性检查 → 审计记录</p>
+<br/>
+<h3>3. 智能合约集成</h3>
+<p>- **代币合约**：CW20标准，管理$LUCKEE代币</p>
+<p>- **NFT合约**：CW721标准，管理投票资格NFT</p>
+<p>- **投票合约**：基于NFT类型全局参数配置驱动投票流程；链上仅记录账户-NFT关联与结果摘要/CID</p>
+<p>- **权限合约**：管理用户权限和等级</p>
+<br/>
+<h2>性能优化策略</h2>
+<br/>
+<h3>1. 计算优化</h3>
+<p>- **WebAssembly**：高性能Rust代码编译</p>
+<p>- **并行处理**：支持大规模并发操作</p>
+<p>- **算法优化**：高效的中奖算法和序号分配</p>
+<br/>
+<h3>2. 存储优化</h3>
+<p>- **分层存储**：链上哈希 + IPFS元数据</p>
+<p>- **批量操作**：支持批量NFT创建和序号分配</p>
+<p>- **缓存策略**：多层缓存减少重复计算</p>
+<br/>
+<h3>3. 网络优化</h3>
+<p>- **异步处理**：非阻塞API调用</p>
+<p>- **连接池**：区块链连接复用</p>
+<p>- **负载均衡**：多节点负载分发</p>
+<br/>
+<h2>安全机制设计</h2>
+<br/>
+<h3>1. 密码学安全</h3>
+<p>- **比特承诺**：保护投票隐私</p>
+<p>- **哈希验证**：确保数据完整性</p>
+<p>- **数字签名**：身份认证和防篡改</p>
+<br/>
+<h3>2. 代币安全</h3>
+<p>- **余额验证**：防止代币余额操纵</p>
+<p>- **权限控制**：防止权限提升攻击</p>
+<p>- **合约安全**：专业安全审计</p>
+<br/>
+<h3>3. NFT安全</h3>
+<p>- **所有权验证**：防止NFT重复使用</p>
+<p>- **元数据安全**：IPFS哈希验证</p>
+<p>- **转移控制**：安全的NFT转移机制</p>
+<br/>
+<h3>4. 抽奖安全</h3>
+<p>- **算法公平性**：可验证的公平算法</p>
+<p>- **结果防篡改**：区块链不可篡改存储</p>
+<p>- **审计机制**：完整的操作审计日志</p>
+<br/>
+<h2>测试策略</h2>
+<br/>
+<h3>1. 单元测试</h3>
+<p>- **算法测试**：中奖算法和序号分配测试</p>
+<p>- **合约测试**：智能合约功能测试</p>
+<p>- **模块测试**：各功能模块独立测试</p>
+<br/>
+<h3>2. 集成测试</h3>
+<p>- **端到端测试**：完整业务流程测试</p>
+<p>- **性能测试**：大规模并发测试</p>
+<p>- **安全测试**：安全漏洞扫描测试</p>
+<br/>
+<h3>3. 压力测试</h3>
+<p>- **并发测试**：高并发场景测试</p>
+<p>- **负载测试**：系统负载能力测试</p>
+<p>- **稳定性测试**：长期运行稳定性测试</p>
+<br/>
+<h2>部署架构</h2>
+<br/>
+<h3>1. 开发环境</h3>
+<p>- **Docker容器化**：统一开发环境</p>
+<p>- **本地区块链**：Injective本地节点</p>
+<p>- **IPFS节点**：本地IPFS开发环境</p>
+<br/>
+<h3>2. 测试环境</h3>
+<p>- **测试网部署**：Injective测试网</p>
+<p>- **自动化测试**：CI/CD流水线</p>
+<p>- **监控告警**：系统监控和告警</p>
+<br/>
+<h3>3. 生产环境</h3>
+<p>- **主网部署**：Injective主网</p>
+<p>- **负载均衡**：多节点负载分发</p>
+<p>- **备份恢复**：数据备份和灾难恢复</p>
+<br/>
+<h2>技术风险与缓解</h2>
+<br/>
+<h3>1. 技术风险</h3>
+<p>- **区块链性能**：通过优化和分层存储缓解</p>
+<p>- **算法安全性**：使用成熟的标准算法</p>
+<p>- **合约安全**：专业安全审计和测试</p>
+<p>- **WebAssembly兼容性**：充分测试，提供降级方案，使用polyfill</p>
+<br/>
+<h3>2. 业务风险</h3>
+<p>- **用户接受度**：友好的用户界面和详细文档</p>
+<p>- **监管合规**：持续关注合规要求</p>
+<p>- **市场竞争**：保持技术领先优势</p>
+<br/>
+<h3>3. 缓解措施</h3>
+<p>- **技术验证**：充分的技术方案验证</p>
+<p>- **安全审计**：定期的安全审计和测试</p>
+<p>- **用户反馈**：及时响应用户反馈和需求</p>
+<p>- **渐进式部署**：先在测试环境验证，小规模用户试用，逐步扩大用户规模</p>
+<br/>
+<h2>文档一致性说明</h2>
+<br/>
+<h3>跨文档技术一致性</h3>
 <p>本技术选型目录下的所有文档都遵循以下一致性原则：</p>
-<ol>
-<li><strong>NFT状态结构统一</strong>：所有文档中的NFTState结构都包含相同的核心字段</li>
-<li><strong>状态模式标准化</strong>：StateSchema在所有应用场景中保持一致的定义</li>
-<li><strong>IPFS存储策略统一</strong>：所有NFT类型的元数据都通过IPFS存储</li>
-<li><strong>iAgent自动化集成</strong>：自动化功能与所有NFT类型和应用场景深度集成</li>
-<li><strong>智能合约接口统一</strong>：所有NFT类型共享相同的智能合约接口</li>
-</ol>
-<h3 id="_12">技术实现一致性</h3>
-<ul>
-<li><strong>多目标选择算法</strong>：在技术脉络总结和多目标选择技术实现方案中保持一致</li>
-<li><strong>多应用场景支持</strong>：所有NFT类型都遵循相同的生命周期管理</li>
-<li><strong>存储策略</strong>：IPFS存储策略在所有文档中保持一致</li>
-<li><strong>自动化流程</strong>：iAgent自动化在所有应用场景中的实现方式一致</li>
-</ul>
-<h3 id="_13">用词准确性保证</h3>
-<ul>
-<li><strong>技术术语</strong>：比特承诺、WebAssembly、CosmWasm、IPFS等术语使用准确</li>
-<li><strong>业务术语</strong>：偏好投票、中奖序号、多目标选择等概念描述准确</li>
-<li><strong>存储概念</strong>：统一使用"IPFS去中心化存储"替代"链下存储"概念</li>
-<li><strong>自动化表述</strong>：统一使用"iAgent自动化"表述，避免概念混用</li>
-</ul>
-<h3 id="_14">文档质量评估</h3>
-<ul>
-<li><strong>一致性</strong>：95% - 各文档在核心概念和架构上高度一致</li>
-<li><strong>准确性</strong>：90% - 技术术语使用准确，少量用词需要统一</li>
-<li><strong>完整性</strong>：95% - 覆盖了系统的所有核心功能和技术细节</li>
-</ul>
-<h3 id="_15">实现可行性评估</h3>
-<ul>
-<li><strong>技术可行性</strong>：95% - 基于成熟技术栈，实现风险较低</li>
-<li><strong>架构可行性</strong>：90% - 模块化设计合理，扩展性良好</li>
-<li><strong>性能可行性</strong>：85% - 通过优化可以达到预期性能指标</li>
-</ul>
-<h2 id="_16">实施建议</h2>
-<h3 id="_17">开发优先级</h3>
-<ol>
-<li><strong>第一阶段（基础架构）</strong>：密码学核心模块、WebAssembly服务器框架、区块链智能合约基础</li>
-<li><strong>第二阶段（核心功能）</strong>：代币验证系统、NFT管理系统、基础投票功能</li>
-<li><strong>第三阶段（高级功能）</strong>：抽奖等级系统、多目标选择系统、iAgent自动化</li>
-</ol>
-<h3 id="_18">测试策略</h3>
-<ul>
-<li><strong>单元测试</strong>：每个模块的独立功能测试，边界条件和异常情况测试</li>
-<li><strong>集成测试</strong>：模块间交互测试，端到端流程测试</li>
-<li><strong>性能测试</strong>：压力测试，并发性能测试，扩展性测试</li>
-</ul>
-<h3 id="_19">部署策略</h3>
-<ul>
-<li><strong>渐进式部署</strong>：先在测试环境验证，小规模用户试用，逐步扩大用户规模</li>
-<li><strong>监控和告警</strong>：建立完善的监控体系，设置合理的告警阈值，建立应急响应机制</li>
-</ul>
-<h2 id="_20">总结</h2>
+<br/>
+<p>1. **NFT状态结构统一**：所有文档中的NFTState结构都包含相同的核心字段</p>
+<p>2. **状态模式标准化**：StateSchema在所有应用场景中保持一致的定义</p>
+<p>3. **IPFS存储策略统一**：所有NFT类型的元数据都通过IPFS存储</p>
+<p>4. **iAgent自动化集成**：自动化功能与所有NFT类型和应用场景深度集成</p>
+<p>5. **智能合约接口统一**：所有NFT类型共享相同的智能合约接口</p>
+<br/>
+<h3>技术实现一致性</h3>
+<p>- **多目标选择算法**：在技术脉络总结和多目标选择技术实现方案中保持一致</p>
+<p>- **多应用场景支持**：所有NFT类型都遵循相同的生命周期管理</p>
+<p>- **存储策略**：IPFS存储策略在所有文档中保持一致</p>
+<p>- **自动化流程**：iAgent自动化在所有应用场景中的实现方式一致</p>
+<br/>
+<h3>用词准确性保证</h3>
+<p>- **技术术语**：比特承诺、WebAssembly、CosmWasm、IPFS等术语使用准确</p>
+<p>- **业务术语**：偏好投票、中奖序号、多目标选择等概念描述准确</p>
+<p>- **存储概念**：统一使用"IPFS去中心化存储"替代"链下存储"概念</p>
+<p>- **自动化表述**：统一使用"iAgent自动化"表述，避免概念混用</p>
+<br/>
+<h3>文档质量评估</h3>
+<p>- **一致性**：95% - 各文档在核心概念和架构上高度一致</p>
+<p>- **准确性**：90% - 技术术语使用准确，少量用词需要统一</p>
+<p>- **完整性**：95% - 覆盖了系统的所有核心功能和技术细节</p>
+<br/>
+<h3>实现可行性评估</h3>
+<p>- **技术可行性**：95% - 基于成熟技术栈，实现风险较低</p>
+<p>- **架构可行性**：90% - 模块化设计合理，扩展性良好</p>
+<p>- **性能可行性**：85% - 通过优化可以达到预期性能指标</p>
+<br/>
+<h2>实施建议</h2>
+<br/>
+<h3>开发优先级</h3>
+<p>1. **第一阶段（基础架构）**：密码学核心模块、WebAssembly服务器框架、区块链智能合约基础</p>
+<p>2. **第二阶段（核心功能）**：代币验证系统、NFT管理系统、基础投票功能</p>
+<p>3. **第三阶段（高级功能）**：抽奖等级系统、多目标选择系统、iAgent自动化</p>
+<br/>
+<h3>测试策略</h3>
+<p>- **单元测试**：每个模块的独立功能测试，边界条件和异常情况测试</p>
+<p>- **集成测试**：模块间交互测试，端到端流程测试</p>
+<p>- **性能测试**：压力测试，并发性能测试，扩展性测试</p>
+<br/>
+<h3>部署策略</h3>
+<p>- **渐进式部署**：先在测试环境验证，小规模用户试用，逐步扩大用户规模</p>
+<p>- **监控和告警**：建立完善的监控体系，设置合理的告警阈值，建立应急响应机制</p>
+<br/>
+<h2>总结</h2>
+<br/>
 <p>本系统通过创新的技术架构，集成了代币权限控制、NFT化投票资格管理、多等级选择（多组多目标选择）系统、多目标选择、iAgent自动化、多应用场景支持和IPFS存储等核心功能。系统在保证安全性、公平性和可扩展性的同时，实现了高性能和用户友好的体验。</p>
-<p>关键技术特点包括：
-1. <strong>模块化设计</strong>：清晰的模块划分和接口定义
-2. <strong>算法创新</strong>：公平的中奖算法和智能序号分配
-3. <strong>安全机制</strong>：多层次的安全防护和验证
-4. <strong>性能优化</strong>：WebAssembly高性能计算和并行处理
-5. <strong>标准兼容</strong>：遵循CW20和CW721标准规范
-6. <strong>NFT驱动</strong>：通过NFT类型控制不同应用场景
-7. <strong>自动化支持</strong>：iAgent自动化处理复杂操作
-8. <strong>去中心化存储</strong>：IPFS完全替代传统链下存储</p>
+<br/>
+<p>关键技术特点包括：</p>
+<p>1. **模块化设计**：清晰的模块划分和接口定义</p>
+<p>2. **算法创新**：公平的中奖算法和智能序号分配</p>
+<p>3. **安全机制**：多层次的安全防护和验证</p>
+<p>4. **性能优化**：WebAssembly高性能计算和并行处理</p>
+<p>5. **标准兼容**：遵循CW20和CW721标准规范</p>
+<p>6. **NFT驱动**：通过NFT类型控制不同应用场景</p>
+<p>7. **自动化支持**：iAgent自动化处理复杂操作</p>
+<p>8. **去中心化存储**：IPFS完全替代传统链下存储</p>
+<br/>
 <p>通过完整的技术文档体系和严谨的开发流程，为系统的成功实施提供了可靠的技术保障。系统支持多种应用场景，具有良好的可扩展性和适应性，为去中心化决策投票系统的发展开辟了新的可能性。</p>
-<h2 id="_21">评估标准与结论</h2>
-<h3 id="_22">评估标准（统一口径）</h3>
-<ul>
-<li>架构一致性：是否统一"链上最小化 + IPFS（CID/版本为单一真实源）"。</li>
-<li>性能可达性：是否满足并发、延迟与扩展性目标。</li>
-<li>安全与合规：是否覆盖承诺/揭示、权限、审计与法域合规边界。</li>
-<li>可运维性：自动化、监控与容灾是否完备。</li>
-<li>可扩展性：NFT类型抽象与插件化扩展能力。</li>
-</ul>
-<h3 id="_23">结论</h3>
+<br/>
+<h2>评估标准与结论</h2>
+<br/>
+<h3>评估标准（统一口径）</h3>
+<p>- 架构一致性：是否统一“链上最小化 + IPFS（CID/版本为单一真实源）”。</p>
+<p>- 性能可达性：是否满足并发、延迟与扩展性目标。</p>
+<p>- 安全与合规：是否覆盖承诺/揭示、权限、审计与法域合规边界。</p>
+<p>- 可运维性：自动化、监控与容灾是否完备。</p>
+<p>- 可扩展性：NFT类型抽象与插件化扩展能力。</p>
+<br/>
+<h3>结论</h3>
 <p>该技术路线满足上述评估标准，建议作为后续实现与治理演进的基线方案推进。</p>
-<hr>
-<p>最后更新：2025-08<br>
-维护人：luckeedao 技术团队</p>
+<br/>
+<p>---</p>
+<br/>
+<p>**文档编制日期**：2025年8月</p>
+<p>**文档编制人**：luckeeDAO技术评估团队</p>
+<p>**文档审核人**：luckeeDAO管理委员会</p>
 </body>
 </html>

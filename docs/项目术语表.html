@@ -24,120 +24,132 @@
     </style>
 </head>
 <body>
-<h1 id="_1">项目术语表（统一术语与用词规范）</h1>
-<blockquote>
-<p>本表用于规范全项目技术与业务术语，确保跨文档一致性与可引用性。别名/同义词仅用于理解，正文统一按“标准术语”书写。</p>
-</blockquote>
-<h2 id="_2">术语总则</h2>
-<ul>
-<li>标准术语优先使用中文；涉及协议、标准、库名、产品名时保留英文专名（如 WebAssembly、CosmWasm、IPFS、CW20、CW721、Injective Protocol）。</li>
-<li>“承诺/揭示”统一采用“揭示”，不使用“揭秘”。</li>
-<li>“链上最小化 + IPFS主要存储”作为统一的存储边界表述。</li>
-</ul>
-<h2 id="_3">技术与架构</h2>
-<ul>
-<li>比特承诺（Bit Commitment）</li>
-<li>定义：参与者先提交承诺哈希以隐藏真实值，在揭示阶段公开原文与随机性以供验证。</li>
-<li>别名：承诺方案、承诺协议</li>
-<li>揭示（Reveal）</li>
-<li>定义：承诺阶段后的公开原文与随机性以验证承诺的过程。</li>
-<li>别名：揭秘（不再使用，统一为“揭示”）</li>
-<li>WebAssembly（WASM）</li>
-<li>定义：面向高性能与可移植的二进制指令格式，用于服务器计算模块。</li>
-<li>Rust / CosmWasm</li>
-<li>定义：智能合约语言与框架栈（Cosmos 生态）。</li>
-<li>Injective Protocol</li>
-<li>定义：部署合约与交互的区块链平台（Cosmos 生态）。</li>
-<li>IPFS（InterPlanetary File System）</li>
-<li>定义：去中心化内容寻址存储网络；本项目的主要明细存储。</li>
-<li>CID（Content Identifier）</li>
-<li>定义：IPFS内容寻址标识，作为链上校验与检索指针。</li>
-<li>单一真实源（Single Source of Truth, SoT）</li>
-<li>定义：以 IPFS 的 <code>CID/版本</code> 作为配置与明细数据的唯一真实源；链上仅保留可验证的摘要/哈希/CID与必要索引。</li>
-<li>Merkle 树（Merkle Tree）</li>
-<li>定义：用于完整性校验的哈希树结构。</li>
-</ul>
-<h2 id="nft">代币与NFT</h2>
-<ul>
-<li>$LUCKEE 代币</li>
-<li>定义：权限控制与门槛校验所用的 CW20 代币。</li>
-<li>CW20 / CW721 标准</li>
-<li>定义：CosmWasm 代币与 NFT 标准。</li>
-<li>NFT 类型（NFT Type）</li>
-<li>定义：以“类型”抽象承载不同应用场景与全局参数配置的单位。</li>
-<li>投票项目（NFT属性接口）</li>
-<li>定义：投票/抽奖项目不是独立模块，而是 NFT 管理的一个属性接口；其配置作为“对应 NFT 类型的全局参数”，以 <code>CID/版本</code> 引用；链上仅存结果摘要与必要索引。</li>
-<li>NFT 全局状态变量（Global State of NFT Type）</li>
-<li>定义：与 NFT 类型关联的跨会话全局状态，用于驱动承诺/揭示等权限与阶段控制。</li>
-<li>投票资格 NFT（Voting Eligibility NFT）</li>
-<li>定义：以账户-NFT 持有关系确认投票资格与会话参与权。</li>
-</ul>
-<h2 id="_4">决策与流程</h2>
-<ul>
-<li>去中心化决策投票（Decentralized Decision Voting）</li>
-<li>定义：项目核心特色的决策机制，不以多数制为依据，而是以一致同意原则为基础，要求参与方在强共识机制下达成决策；其结果不由任何一部分人或子集决定，而是由全体参与者的偏好值共同决定；强调全体偏好被汇总、过程可验证与抗操纵。</li>
-<li>别名：一致同意制决策、强共识决策</li>
-<li>决策投票（Decision Voting）/ 偏好投票（Preference Vote）</li>
-<li>定义：参与者提交整数偏好并经统一流程汇总计算结果。</li>
-<li>NFT 类型控制（NFT Type–Driven Control）</li>
-<li>
-<p>定义：不同应用领域/决策方式由不同的 NFT 类型承载与控制；类型决定全局参数、状态变量与规则。</p>
-</li>
-<li>
-<p>抽奖/彩票决策方式（Lottery/Lottery Ticket Modes）</p>
-</li>
-<li>唯一中奖（Single Winner）：多目标选择的特例，等价于 k=1 的 n 选 k；仅产生 1 个中奖号码。</li>
-<li>多个中奖（Multiple Winners）：标准的 n 选 k（k&gt;1），产生 k 个互不冲突的号码。</li>
-<li>
-<p>多等级选择（Tiered Selection）：等价于多个 n 选 k 的组合与编排；定义为“多组多目标选择”，可按等级拆分为若干子选择，每个子选择具备各自的 k 与规则。</p>
-</li>
-<li>
-<p>多目标选择与偏好值组（Multi-Target Selection &amp; Preference Sets）</p>
-</li>
-<li>定义：n 选 k 的公平选择机制。</li>
-<li>偏好值映射：<ul>
-<li>单个多目标选择对应 1 组偏好值（用于计算 k 个结果）。</li>
-<li>多个多目标选择对应多组偏好值（各选择/等级各一组）。</li>
-</ul>
-</li>
-<li>
-<p>层级：不作为独立 NFT 类型，而是抽奖/彩票决策类型下的选择模式（唯一中奖为 n 选 1 的特例）。</p>
-</li>
-<li>
-<p>资源分配型投票（Resource Allocation Voting）</p>
-</li>
-<li>竞用性决策（Competitive）：资源有限且排他（如名额/额度）；需避免冲突与重叠。</li>
-<li>非竞用性决策（Non-Competitive）：资源非排他，可并行满足（如公共品偏好表达）。</li>
-<li>单目标决策 / 多目标决策</li>
-<li>定义：各产生 1 个或 k 个互不冲突的结果。</li>
-<li>统一 NFT 决策状态机</li>
-<li>定义：Draft → CommitOpen → CommitClosed → RevealOpen → Revealed → Tallied → Executed → Archived。</li>
-<li>多等级选择（Tiered Selection）/ 结果序号（Winning Number）</li>
-<li>定义：基于配置的公平选择与唯一序号分配机制；当分层存在时等价“多组多目标选择”。</li>
-<li>多目标选择（n 选 k）</li>
-<li>定义：从 n 个参与者中公平选出 k 个不同序号，含基准与偏移计算与防冲突机制。</li>
-</ul>
-<h2 id="_5">存储边界</h2>
-<ul>
-<li>链上最小记录集（On-chain Minimal Set）</li>
-<li>定义：账户-NFT 关联、结果摘要/哈希/CID、必要索引与事件。</li>
-<li>IPFS 主要存储（Off-chain via IPFS）</li>
-<li>定义：承诺/揭示明细、参与者列表、计算过程与证明、完整配置与版本、NFT 元数据。</li>
-</ul>
-<h2 id="_6">自动化</h2>
-<ul>
-<li>iAgent 自动化（iAgent Automation）</li>
-<li>定义：对承诺与揭示流程进行策略化、条件化与批量化的自动执行组件。</li>
-</ul>
-<h2 id="_7">用词统一与别名规范</h2>
-<ul>
-<li>揭示 = 标准；揭秘 = 别名（不使用于新文本）</li>
-<li>NFT 类型 = 标准；NFT种类 = 别名</li>
-<li>投票项目属性接口 = 标准；投票项目管理模块（独立）= 过时说法（应表述为 NFT 管理的属性接口）</li>
-<li>链上最小化 + IPFS主要存储 = 标准；链下存储 = 过时表述（避免）</li>
-</ul>
-<hr>
-<p>最后更新：2025-08
-维护人：luckeedao 技术团队</p>
+<h1>项目术语表（统一术语与用词规范）</h1>
+<br/>
+<p>> 本表用于规范全项目技术与业务术语，确保跨文档一致性与可引用性。别名/同义词仅用于理解，正文统一按“标准术语”书写。</p>
+<br/>
+<h2>术语总则</h2>
+<p>- 标准术语优先使用中文；涉及协议、标准、库名、产品名时保留英文专名（如 WebAssembly、CosmWasm、IPFS、CW20、CW721、Injective Protocol）。</p>
+<p>- “承诺/揭示”统一采用“揭示”，不使用“揭秘”。</p>
+<p>- “链上最小化 + IPFS主要存储”作为统一的存储边界表述。</p>
+<br/>
+<h2>技术与架构</h2>
+<p>- 比特承诺（Bit Commitment）</p>
+<p>  - 定义：参与者先提交承诺哈希以隐藏真实值，在揭示阶段公开原文与随机性以供验证。</p>
+<p>  - 别名：承诺方案、承诺协议</p>
+<p>- 揭示（Reveal）</p>
+<p>  - 定义：承诺阶段后的公开原文与随机性以验证承诺的过程。</p>
+<p>  - 别名：揭秘（不再使用，统一为“揭示”）</p>
+<p>- WebAssembly（WASM）</p>
+<p>  - 定义：面向高性能与可移植的二进制指令格式，用于服务器计算模块。</p>
+<p>- Rust / CosmWasm</p>
+<p>  - 定义：智能合约语言与框架栈（Cosmos 生态）。</p>
+<p>- Injective Protocol</p>
+<p>  - 定义：部署合约与交互的区块链平台（Cosmos 生态）。</p>
+<p>- IPFS（InterPlanetary File System）</p>
+<p>  - 定义：去中心化内容寻址存储网络；本项目的主要明细存储。</p>
+<p>- CID（Content Identifier）</p>
+<p>  - 定义：IPFS内容寻址标识，作为链上校验与检索指针。</p>
+<p>- 单一真实源（Single Source of Truth, SoT）</p>
+<p>  - 定义：以 IPFS 的 `CID/版本` 作为配置与明细数据的唯一真实源；链上仅保留可验证的摘要/哈希/CID与必要索引。</p>
+<p>- Merkle 树（Merkle Tree）</p>
+<p>  - 定义：用于完整性校验的哈希树结构。</p>
+<br/>
+<h2>代币与NFT</h2>
+<p>- $LUCKEE 代币</p>
+<p>  - 定义：权限控制与门槛校验所用的 CW20 代币。</p>
+<p>- CW20 / CW721 标准</p>
+<p>  - 定义：CosmWasm 代币与 NFT 标准。</p>
+<p>- NFT 类型（NFT Type）</p>
+<p>  - 定义：以“类型”抽象承载不同应用场景与全局参数配置的单位。</p>
+<p>- 投票项目（NFT属性接口）</p>
+<p>  - 定义：投票/抽奖项目不是独立模块，而是 NFT 管理的一个属性接口；其配置作为“对应 NFT 类型的全局参数”，以 `CID/版本` 引用；链上仅存结果摘要与必要索引。</p>
+<p>- NFT 全局状态变量（Global State of NFT Type）</p>
+<p>  - 定义：与 NFT 类型关联的跨会话全局状态，用于驱动承诺/揭示等权限与阶段控制。</p>
+<p>- 投票资格 NFT（Voting Eligibility NFT）</p>
+<p>  - 定义：以账户-NFT 持有关系确认投票资格与会话参与权。</p>
+<br/>
+<h2>决策与流程</h2>
+<p>- 去中心化决策投票（Decentralized Decision Voting）</p>
+<p>  - 定义：本项目对“去中心化”的定义由五大原则构成：分散与平等、全员一致性共识、抗合谋与抗操纵、偏好显示自由性、透明与可验证；任何结果由全体参与者偏好叠加产生，不依赖个人或子集，且协议阻止任何规模子集主导或篡改结果。</p>
+<p>  - 别名：一致同意制决策、强共识决策</p>
+<p>- 决策投票（Decision Voting）/ 偏好投票（Preference Vote）</p>
+<p>  - 定义：参与者提交整数偏好并经统一流程汇总计算结果。</p>
+<p>- NFT 类型控制（NFT Type–Driven Control）</p>
+<p>  - 定义：不同应用领域/决策方式由不同的 NFT 类型承载与控制；类型决定全局参数、状态变量与规则。</p>
+<br/>
+<p>- **决策类型分类（按结果基数）**：</p>
+<p>  - **单目标决策（Single Target Decision）**：从n个候选人中选择1个中奖人，每次仅产生一个获胜结果。</p>
+<p>    - 实例：单一中奖抽奖、单提案通过投票、唯一获奖者评选</p>
+<p>    - 特点：结果唯一，竞争激烈，适用于需要明确单一获胜者的场景</p>
+<p>  - **多目标决策（Multi-Target Decision）**：从n个候选人中选择k个中奖人，奖励相同，一次产生多个互不冲突的获胜结果。</p>
+<p>    - 实例：多人中奖抽奖（如从100人中选出10个获奖者）、多席位选举、批量奖励分配</p>
+<p>    - 特点：多个获胜者，奖励均等，适用于需要批量选择获胜者的场景</p>
+<p>  - **多等级决策（Multi-Tier Decision）**：从n个候选人中选择k组中奖人，每组内部奖励相同，不同组之间奖励不同。</p>
+<p>    - 实例：等级化抽奖（一等奖1名、二等奖3名、三等奖5名）、分级奖励系统、多层级评选</p>
+<p>    - 特点：分层奖励，激励差异化，适用于需要建立奖励梯度的场景</p>
+<br/>
+<p>- **决策类型分类（按资源属性）**：</p>
+<p>  - **竞用性资源决策（Competitive Resource Decision）**：资源有限且排他（如名额/额度），需避免冲突与重叠。</p>
+<p>  - **非竞用性资源决策（Non-Competitive Resource Decision）**：资源非排他，可并行满足（如公共品偏好表达）。</p>
+<br/>
+<p>- **多目标选择与偏好值组（Multi-Target Selection & Preference Sets）**</p>
+<p>  - 定义：n 选 k 的公平选择机制，支持单目标（k=1）、多目标（k>1）和多等级（多组k值）选择。</p>
+<p>  - 偏好值映射：</p>
+<p>    - 单目标选择：对应 1 组偏好值（用于计算 1 个结果）。</p>
+<p>    - 多目标选择：对应 1 组偏好值（用于计算 k 个结果）。</p>
+<p>    - 多等级选择：对应多组偏好值（各等级各一组，每组计算对应的k个结果）。</p>
+<p>  - 层级：不作为独立 NFT 类型，而是抽奖/彩票决策类型下的选择模式。</p>
+<br/>
+<p>- **统一 NFT 决策状态机**</p>
+<p>  - 定义：Draft → CommitOpen → CommitClosed → RevealOpen → Revealed → Tallied → Executed → Archived。</p>
+<p>- **多等级选择（Tiered Selection）/ 结果序号（Winning Number）**</p>
+<p>  - 定义：基于配置的公平选择与唯一序号分配机制；当分层存在时等价"多组多目标选择"。</p>
+<p>- **多目标选择（n 选 k）**</p>
+<p>  - 定义：从 n 个参与者中公平选出 k 个不同序号，含基准与偏移计算与防冲突机制。</p>
+<br/>
+<h2>算法与数学符号</h2>
+<p>- Φ 映射（Normalization Φ）</p>
+<p>  - 定义：Φ(x,n)=((x mod n)+n) mod n，输出范围 0..n-1；显示编号采用 1..n（0→n）。</p>
+<p>- nextUnique（顺序下延的唯一化算子）</p>
+<p>  - 定义：在环 0..n-1 上，从起点 start 出发，按“仅在命中未占用时计步”的策略前进 steps 次；若落点仍占用则以步长1继续前进至未占用索引；返回索引。</p>
+<p>- 列和（S_j）与偏移（O_j）</p>
+<p>  - 定义：S_j=Σ_i v_{ij}；O_j=Φ(S_j,n)，j≥2；基准 A_1_idx=Φ(S_1,n)。</p>
+<p> - 域分离与盐（Domain Separation & Salt）</p>
+<p>   - 定义：对每列 j 使用独立域标签 domain_j 与独立盐 salt_j；S_j 以 H(domain_j || v_{ij} || salt_j || ctx) 聚合；ctx 包含会话ID、NFT类型、配置CID、区块高度等。</p>
+<p> - 权重快照（Weight Snapshot）</p>
+<p>   - 定义：在区块高度 h 对账户权重（代币余额/NFT权重）取快照用于计票，避免投票期间转移操纵；配置中记录 snapshotHeight。</p>
+<br/>
+<h2>资源决策相关</h2>
+<p>- 竞用性资源决策</p>
+<p>  - 定义：有限且排他的资源匹配/分配问题（最大权匹配/匈牙利/流模型），满足资格与容量约束。</p>
+<p>- 非竞用性资源决策</p>
+<p>  - 定义：非排他公共品的偏好聚合与阈值/预算内选择问题（阈值通过/背包选择）。</p>
+<br/>
+<h2>存储边界</h2>
+<p>- 链上最小记录集（On-chain Minimal Set）</p>
+<p>  - 定义：账户-NFT 关联、结果摘要/哈希/CID、必要索引与事件。</p>
+<p>- IPFS 主要存储（Off-chain via IPFS）</p>
+<p>  - 定义：承诺/揭示明细、参与者列表、计算过程与证明、完整配置与版本、NFT 元数据。</p>
+<br/>
+<h2>自动化</h2>
+<p>- iAgent 自动化（iAgent Automation）</p>
+<p>  - 定义：对承诺与揭示流程进行策略化、条件化与批量化的自动执行组件。</p>
+<br/>
+<h2>用词统一与别名规范</h2>
+<p>- 揭示 = 标准；揭秘 = 别名（不使用于新文本）</p>
+<p>- NFT 类型 = 标准；NFT种类 = 别名</p>
+<p>- 投票项目属性接口 = 标准；投票项目管理模块（独立）= 过时说法（应表述为 NFT 管理的属性接口）</p>
+<p>- 链上最小化 + IPFS主要存储 = 标准；链下存储 = 过时表述（避免）</p>
+<br/>
+<p>---</p>
+<br/>
+<p>**文档编制日期**：2025年8月</p>
+<p>**文档编制人**：luckeeDAO技术评估团队</p>
+<p>**文档审核人**：luckeeDAO管理委员会</p>
+<br/>
+<p>最后更新：2025-01</p>
+<p>维护人：文档与架构联合组</p>
+<br/>
 </body>
 </html>

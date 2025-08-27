@@ -25,33 +25,34 @@
 </head>
 <body>
 <p>﻿# iAgent自动化功能设计说明书</p>
-<blockquote>
-<p>用词规范：请参阅《<a href="../项目术语表.html">项目术语表</a>》以确保术语统一。</p>
-</blockquote>
-<h2 id="1">1. 概述</h2>
-<h3 id="11">1.1 设计目标</h3>
+<p>> 用词规范：请参阅《[项目术语表](../项目术语表.md)》以确保术语统一。</p>
+<br/>
+<h2>1. 概述</h2>
+<br/>
+<h3>1.1 设计目标</h3>
 <p>本功能旨在通过iAgent实现比特承诺模型的自动化承诺与揭示流程，确保用户设置之后可以自动化的实现承诺与揭示操作，减少人工干预，提高系统效率和用户体验。</p>
-<h3 id="12">1.2 核心特性</h3>
-<ul>
-<li><strong>自动化承诺管理</strong>：支持多种承诺策略的自动执行</li>
-<li><strong>智能揭示触发</strong>：基于多种条件自动触发揭示操作</li>
-<li><strong>批量处理能力</strong>：支持批量承诺和批量揭示操作</li>
-<li><strong>实时监控</strong>：提供自动化执行状态的实时监控</li>
-<li><strong>故障恢复</strong>：具备自动故障检测和恢复能力</li>
-</ul>
-<h3 id="13">1.3 应用场景</h3>
-<ul>
-<li>去中心化投票系统的自动化管理</li>
-<li>抽奖活动的自动化流程控制</li>
-<li>大规模承诺操作的批量处理</li>
-<li>基于条件的智能揭示触发</li>
-<li><strong>多目标选择自动化</strong>：自动处理多目标选择的承诺和揭示流程</li>
-<li><strong>NFT状态管理</strong>：自动监控和更新NFT状态变量</li>
-<li><strong>跨应用场景协调</strong>：协调不同NFT类型间的自动化操作</li>
-</ul>
-<h2 id="2">2. 系统架构</h2>
-<h3 id="21">2.1 整体架构</h3>
-<div class="codehilite"><pre><span></span><code>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+<br/>
+<h3>1.2 核心特性</h3>
+<p>- **自动化承诺管理**：支持多种承诺策略的自动执行</p>
+<p>- **智能揭示触发**：基于多种条件自动触发揭示操作</p>
+<p>- **批量处理能力**：支持批量承诺和批量揭示操作</p>
+<p>- **实时监控**：提供自动化执行状态的实时监控</p>
+<p>- **故障恢复**：具备自动故障检测和恢复能力</p>
+<br/>
+<h3>1.3 应用场景</h3>
+<p>- 去中心化投票系统的自动化管理</p>
+<p>- 抽奖活动的自动化流程控制</p>
+<p>- 大规模承诺操作的批量处理</p>
+<p>- 基于条件的智能揭示触发</p>
+<p>- **多目标选择自动化**：自动处理多目标选择的承诺和揭示流程</p>
+<p>- **NFT状态管理**：自动监控和更新NFT状态变量</p>
+<p>- **跨应用场景协调**：协调不同NFT类型间的自动化操作</p>
+<br/>
+<h2>2. 系统架构</h2>
+<br/>
+<h3>2.1 整体架构</h3>
+<pre><code>
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   用户配置层    │    │   iAgent核心层   │    │   执行引擎层    │
 │                 │    │                 │    │                 │
 │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
@@ -72,863 +73,888 @@
 │ │ 告警通知    │ │    │ │ 队列管理    │ │    │ │ 结果验证    │ │
 │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-</code></pre></div>
-
-<h3 id="22">2.2 核心组件</h3>
-<ol>
-<li><strong>策略管理器</strong>：管理不同的自动化策略和配置</li>
-<li><strong>条件监控器</strong>：实时监控触发条件的变化</li>
-<li><strong>任务调度器</strong>：调度和执行自动化任务</li>
-<li><strong>执行引擎</strong>：执行具体的承诺和揭示操作</li>
-<li><strong>监控反馈</strong>：监控执行状态并提供反馈</li>
-</ol>
-<h2 id="3">3. 核心数据结构</h2>
-<h3 id="31">3.1 自动化配置</h3>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[derive(Debug, Clone, Serialize, Deserialize)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">IAgentConfig</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">agent_id</span>: <span class="nb">String</span><span class="p">,</span><span class="w">                    </span><span class="c1">// 代理唯一标识</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">automation_enabled</span>: <span class="kt">bool</span><span class="p">,</span><span class="w">            </span><span class="c1">// 是否启用自动化</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">auto_commit_interval</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// 自动承诺间隔（秒）</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">auto_reveal_delay</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span><span class="w">     </span><span class="c1">// 自动揭示延迟（秒）</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">commitment_strategy</span>: <span class="nc">CommitmentStrategy</span><span class="p">,</span><span class="w"> </span><span class="c1">// 承诺策略</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">reveal_conditions</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">RevealCondition</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="c1">// 揭示条件</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">batch_size</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span><span class="w">            </span><span class="c1">// 批量处理大小</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">smart_timing</span>: <span class="kt">bool</span><span class="p">,</span><span class="w">                 </span><span class="c1">// 是否启用智能定时</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">retry_config</span>: <span class="nc">RetryConfig</span><span class="p">,</span><span class="w">          </span><span class="c1">// 重试配置</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">security_config</span>: <span class="nc">SecurityConfig</span><span class="p">,</span><span class="w">    </span><span class="c1">// 安全配置</span>
-<span class="p">}</span>
-
-<span class="cp">#[derive(Debug, Clone, Serialize, Deserialize)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">CommitmentStrategy</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Immediate</span><span class="p">,</span><span class="w">      </span><span class="c1">// 立即执行</span>
-<span class="w">    </span><span class="n">Scheduled</span><span class="p">,</span><span class="w">      </span><span class="c1">// 定时执行</span>
-<span class="w">    </span><span class="n">Conditional</span><span class="p">,</span><span class="w">    </span><span class="c1">// 条件触发</span>
-<span class="w">    </span><span class="n">Batch</span><span class="p">,</span><span class="w">          </span><span class="c1">// 批量处理</span>
-<span class="w">    </span><span class="n">Adaptive</span><span class="p">,</span><span class="w">       </span><span class="c1">// 自适应策略</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="32">3.2 触发条件</h3>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[derive(Debug, Clone, Serialize, Deserialize)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">RevealCondition</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">condition_type</span>: <span class="nc">RevealConditionType</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">threshold</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span><span class="w">             </span><span class="c1">// 阈值</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">time_trigger</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span><span class="w">          </span><span class="c1">// 时间触发器</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">participant_count</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span><span class="w">     </span><span class="c1">// 参与者数量</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">completion_percentage</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">f64</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="c1">// 完成度百分比</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">custom_logic</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span><span class="w">       </span><span class="c1">// 自定义逻辑</span>
-<span class="p">}</span>
-
-<span class="cp">#[derive(Debug, Clone, Serialize, Deserialize)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">RevealConditionType</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">TimeBased</span><span class="p">,</span><span class="w">          </span><span class="c1">// 基于时间</span>
-<span class="w">    </span><span class="n">ParticipantCount</span><span class="p">,</span><span class="w">   </span><span class="c1">// 基于参与者数量</span>
-<span class="w">    </span><span class="n">VoteCompletion</span><span class="p">,</span><span class="w">     </span><span class="c1">// 基于投票完成度</span>
-<span class="w">    </span><span class="n">Manual</span><span class="p">,</span><span class="w">             </span><span class="c1">// 手动触发</span>
-<span class="w">    </span><span class="n">Automatic</span><span class="p">,</span><span class="w">          </span><span class="c1">// 自动触发</span>
-<span class="w">    </span><span class="n">Smart</span><span class="p">,</span><span class="w">              </span><span class="c1">// 智能触发</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="33">3.3 执行状态</h3>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[derive(Debug, Clone, Serialize, Deserialize)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">AutomationState</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">is_automated</span>: <span class="kt">bool</span><span class="p">,</span><span class="w">                 </span><span class="c1">// 是否启用自动化</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">config</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="n">IAgentConfig</span><span class="o">&gt;</span><span class="p">,</span><span class="w">       </span><span class="c1">// 自动化配置</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">last_automation_run</span>: <span class="nb">Option</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="p">,</span><span class="w">   </span><span class="c1">// 最后运行时间</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">automation_status</span>: <span class="nc">AutomationStatus</span><span class="p">,</span><span class="w"> </span><span class="c1">// 自动化状态</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">batch_queue</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span><span class="w">           </span><span class="c1">// 批量队列</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">reveal_queue</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">RevealData</span><span class="o">&gt;</span><span class="p">,</span><span class="w">      </span><span class="c1">// 揭示队列</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">execution_history</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">ExecutionRecord</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="c1">// 执行历史</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">error_log</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">ErrorRecord</span><span class="o">&gt;</span><span class="p">,</span><span class="w">        </span><span class="c1">// 错误日志</span>
-<span class="p">}</span>
-
-<span class="cp">#[derive(Debug, Clone, PartialEq)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">AutomationStatus</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Active</span><span class="p">,</span><span class="w">         </span><span class="c1">// 活跃</span>
-<span class="w">    </span><span class="n">Paused</span><span class="p">,</span><span class="w">         </span><span class="c1">// 暂停</span>
-<span class="w">    </span><span class="n">Completed</span><span class="p">,</span><span class="w">      </span><span class="c1">// 完成</span>
-<span class="w">    </span><span class="n">Error</span><span class="p">,</span><span class="w">          </span><span class="c1">// 错误</span>
-<span class="w">    </span><span class="n">Maintenance</span><span class="p">,</span><span class="w">    </span><span class="c1">// 维护中</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2 id="4">4. 核心功能实现</h2>
-<h3 id="41">4.1 自动化承诺管理</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">IAgentCommitmentManager</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">config</span>: <span class="nc">IAgentConfig</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">pending_commitments</span>: <span class="nc">HashMap</span><span class="o">&lt;</span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">PendingCommitment</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">commitment_scheduler</span>: <span class="nc">CommitmentScheduler</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">reveal_monitor</span>: <span class="nc">RevealMonitor</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">security_validator</span>: <span class="nc">SecurityValidator</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">IAgentCommitmentManager</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="sd">/// 设置自动化承诺</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">setup_automated_commitment</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">message</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">strategy</span>: <span class="kp">&amp;</span><span class="nc">CommitmentStrategy</span><span class="p">,</span>
-<span class="w">        </span><span class="n">conditions</span>: <span class="kp">&amp;</span><span class="p">[</span><span class="n">RevealCondition</span><span class="p">]</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 验证输入参数</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">validate_input_parameters</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">strategy</span><span class="p">,</span><span class="w"> </span><span class="n">conditions</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 生成承诺</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">commitment</span><span class="p">,</span><span class="w"> </span><span class="n">randomness</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BitCommitment</span>::<span class="n">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">commitment_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">generate_commitment_id</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">);</span>
-
-<span class="w">        </span><span class="c1">// 创建待处理承诺</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">pending_commitment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PendingCommitment</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">commitment_id</span>: <span class="nc">commitment_id</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">message</span><span class="p">,</span>
-<span class="w">            </span><span class="n">randomness</span><span class="p">,</span>
-<span class="w">            </span><span class="n">created_at</span>: <span class="nc">self</span><span class="p">.</span><span class="n">get_current_timestamp</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">scheduled_reveal_time</span>: <span class="nc">self</span><span class="p">.</span><span class="n">calculate_reveal_time</span><span class="p">(</span><span class="o">&amp;</span><span class="n">conditions</span><span class="p">),</span>
-<span class="w">            </span><span class="n">status</span>: <span class="nc">CommitmentStatus</span>::<span class="n">Pending</span><span class="p">,</span>
-<span class="w">            </span><span class="n">retry_count</span>: <span class="mi">0</span><span class="p">,</span>
-<span class="w">            </span><span class="n">last_error</span>: <span class="nb">None</span><span class="p">,</span>
-<span class="w">        </span><span class="p">};</span>
-
-<span class="w">        </span><span class="c1">// 根据策略安排执行</span>
-<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">CommitmentStrategy</span>::<span class="n">Immediate</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">execute_immediate_commitment</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pending_commitment</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">CommitmentStrategy</span>::<span class="n">Scheduled</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">schedule_commitment</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pending_commitment</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">CommitmentStrategy</span>::<span class="n">Conditional</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">setup_conditional_commitment</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pending_commitment</span><span class="p">,</span><span class="w"> </span><span class="n">conditions</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">CommitmentStrategy</span>::<span class="n">Batch</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">add_to_batch_commitment</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pending_commitment</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">CommitmentStrategy</span>::<span class="n">Adaptive</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">setup_adaptive_commitment</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pending_commitment</span><span class="p">,</span><span class="w"> </span><span class="n">conditions</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 保存到存储</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">pending_commitments</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">commitment_id</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span><span class="w"> </span><span class="n">pending_commitment</span><span class="p">);</span>
-
-<span class="w">        </span><span class="c1">// 记录执行日志</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">log_execution_event</span><span class="p">(</span><span class="o">&amp;</span><span class="n">commitment_id</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;commitment_setup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">commitment_id</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="sd">/// 执行自动揭示</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">execute_automated_reveal</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">commitment_id</span>: <span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="p">(),</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 获取待处理承诺</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">pending_commitment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">pending_commitments</span><span class="p">.</span><span class="n">get_mut</span><span class="p">(</span><span class="n">commitment_id</span><span class="p">)</span>
-<span class="w">            </span><span class="p">.</span><span class="n">ok_or</span><span class="p">(</span><span class="s">&quot;Commitment not found&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 检查状态</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">pending_commitment</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">CommitmentStatus</span>::<span class="n">Committed</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="s">&quot;Commitment not ready for reveal&quot;</span><span class="p">.</span><span class="n">into</span><span class="p">());</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 执行揭示</span>
-<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">reveal_commitment</span><span class="p">(</span><span class="n">pending_commitment</span><span class="p">).</span><span class="k">await</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nb">Ok</span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">pending_commitment</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CommitmentStatus</span>::<span class="n">Revealed</span><span class="p">;</span>
-<span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">log_execution_event</span><span class="p">(</span><span class="n">commitment_id</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;reveal_execution&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="nb">Err</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">pending_commitment</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CommitmentStatus</span>::<span class="n">Error</span><span class="p">;</span>
-<span class="w">                </span><span class="n">pending_commitment</span><span class="p">.</span><span class="n">last_error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">to_string</span><span class="p">());</span>
-<span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">log_execution_event</span><span class="p">(</span><span class="n">commitment_id</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;reveal_execution&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;error&quot;</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="42">4.2 智能触发系统</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">SmartTriggerSystem</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">trigger_engine</span>: <span class="nc">TriggerEngine</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">condition_evaluator</span>: <span class="nc">ConditionEvaluator</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">prediction_model</span>: <span class="nc">PredictionModel</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">SmartTriggerSystem</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="sd">/// 智能触发条件评估</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">evaluate_smart_trigger</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">commitment_id</span>: <span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span>
-<span class="w">        </span><span class="n">current_context</span>: <span class="kp">&amp;</span><span class="nc">SystemContext</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">TriggerDecision</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 获取历史数据</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">historical_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_historical_data</span><span class="p">(</span><span class="n">commitment_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 分析当前系统状态</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">system_analysis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">analyze_system_state</span><span class="p">(</span><span class="n">current_context</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 预测最佳执行时机</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">prediction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">prediction_model</span><span class="p">.</span><span class="n">predict_optimal_timing</span><span class="p">(</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">historical_data</span><span class="p">,</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">system_analysis</span>
-<span class="w">        </span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 生成触发决策</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">decision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TriggerDecision</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">should_trigger</span>: <span class="nc">prediction</span><span class="p">.</span><span class="n">should_execute</span><span class="p">,</span>
-<span class="w">            </span><span class="n">optimal_timing</span>: <span class="nc">prediction</span><span class="p">.</span><span class="n">optimal_timing</span><span class="p">,</span>
-<span class="w">            </span><span class="n">confidence_score</span>: <span class="nc">prediction</span><span class="p">.</span><span class="n">confidence</span><span class="p">,</span>
-<span class="w">            </span><span class="n">reasoning</span>: <span class="nc">prediction</span><span class="p">.</span><span class="n">reasoning</span><span class="p">,</span>
-<span class="w">        </span><span class="p">};</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">decision</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="sd">/// 自适应触发策略</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">adaptive_trigger_strategy</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">commitment_id</span>: <span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span>
-<span class="w">        </span><span class="n">strategy</span>: <span class="kp">&amp;</span><span class="nc">CommitmentStrategy</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">AdaptiveStrategy</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">CommitmentStrategy</span>::<span class="n">Adaptive</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// 分析历史执行模式</span>
-<span class="w">                </span><span class="kd">let</span><span class="w"> </span><span class="n">execution_patterns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">analyze_execution_patterns</span><span class="p">(</span><span class="n">commitment_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">                </span><span class="c1">// 生成自适应策略</span>
-<span class="w">                </span><span class="kd">let</span><span class="w"> </span><span class="n">adaptive_strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AdaptiveStrategy</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">base_strategy</span>: <span class="nc">CommitmentStrategy</span>::<span class="n">Conditional</span><span class="p">,</span>
-<span class="w">                    </span><span class="n">dynamic_conditions</span>: <span class="nc">self</span><span class="p">.</span><span class="n">generate_dynamic_conditions</span><span class="p">(</span><span class="o">&amp;</span><span class="n">execution_patterns</span><span class="p">),</span>
-<span class="w">                    </span><span class="n">learning_rate</span>: <span class="mf">0.1</span><span class="p">,</span>
-<span class="w">                    </span><span class="n">adaptation_threshold</span>: <span class="mf">0.8</span><span class="p">,</span>
-<span class="w">                </span><span class="p">};</span>
-
-<span class="w">                </span><span class="nb">Ok</span><span class="p">(</span><span class="n">adaptive_strategy</span><span class="p">)</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// 使用固定策略</span>
-<span class="w">                </span><span class="nb">Ok</span><span class="p">(</span><span class="n">AdaptiveStrategy</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">base_strategy</span>: <span class="nc">strategy</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">                    </span><span class="n">dynamic_conditions</span>: <span class="nb">Vec</span>::<span class="n">new</span><span class="p">(),</span>
-<span class="w">                    </span><span class="n">learning_rate</span>: <span class="mf">0.0</span><span class="p">,</span>
-<span class="w">                    </span><span class="n">adaptation_threshold</span>: <span class="mf">1.0</span><span class="p">,</span>
-<span class="w">                </span><span class="p">})</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="43">4.3 批量处理引擎</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">BatchProcessingEngine</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">batch_queue</span>: <span class="nc">VecDeque</span><span class="o">&lt;</span><span class="n">BatchTask</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">batch_config</span>: <span class="nc">BatchConfig</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">processor_pool</span>: <span class="nc">ThreadPool</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">BatchProcessingEngine</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="sd">/// 批量承诺处理</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">process_batch_commitments</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">batch_id</span>: <span class="kp">&amp;</span><span class="kt">str</span>
-    <span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">BatchResult</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 获取批量任务</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">batch_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_batch_tasks</span><span class="p">(</span><span class="n">batch_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 验证批量任务</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">validate_batch_tasks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">batch_tasks</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 并行处理承诺</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">results</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">CommitmentResult</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">batch_tasks</span>
-<span class="w">            </span><span class="p">.</span><span class="n">into_par_iter</span><span class="p">()</span>
-<span class="w">            </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">task</span><span class="o">|</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">process_single_commitment</span><span class="p">(</span><span class="n">task</span><span class="p">))</span>
-<span class="w">            </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-
-<span class="w">        </span><span class="c1">// 汇总结果</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">batch_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BatchResult</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">batch_id</span>: <span class="nc">batch_id</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">total_tasks</span>: <span class="nc">results</span><span class="p">.</span><span class="n">len</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">successful_tasks</span>: <span class="nc">results</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">r</span><span class="o">|</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">is_ok</span><span class="p">()).</span><span class="n">count</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">failed_tasks</span>: <span class="nc">results</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">r</span><span class="o">|</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">is_err</span><span class="p">()).</span><span class="n">count</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">execution_time</span>: <span class="nc">self</span><span class="p">.</span><span class="n">get_execution_time</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">results</span>: <span class="nc">results</span><span class="p">.</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">(),</span>
-<span class="w">        </span><span class="p">};</span>
-
-<span class="w">        </span><span class="c1">// 记录批量处理结果</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">log_batch_result</span><span class="p">(</span><span class="o">&amp;</span><span class="n">batch_result</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">batch_result</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="sd">/// 批量揭示处理</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">process_batch_reveals</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">batch_id</span>: <span class="kp">&amp;</span><span class="kt">str</span>
-    <span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">BatchResult</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 获取批量揭示任务</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">reveal_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_reveal_tasks</span><span class="p">(</span><span class="n">batch_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 验证揭示条件</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">validate_reveal_conditions</span><span class="p">(</span><span class="o">&amp;</span><span class="n">reveal_tasks</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 并行处理揭示</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">results</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">RevealResult</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reveal_tasks</span>
-<span class="w">            </span><span class="p">.</span><span class="n">into_par_iter</span><span class="p">()</span>
-<span class="w">            </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">task</span><span class="o">|</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">process_single_reveal</span><span class="p">(</span><span class="n">task</span><span class="p">))</span>
-<span class="w">            </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-
-<span class="w">        </span><span class="c1">// 汇总结果</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">batch_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BatchResult</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">batch_id</span>: <span class="nc">batch_id</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">total_tasks</span>: <span class="nc">results</span><span class="p">.</span><span class="n">len</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">successful_tasks</span>: <span class="nc">results</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">r</span><span class="o">|</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">is_ok</span><span class="p">()).</span><span class="n">count</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">failed_tasks</span>: <span class="nc">results</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">r</span><span class="o">|</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">is_err</span><span class="p">()).</span><span class="n">count</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">execution_time</span>: <span class="nc">self</span><span class="p">.</span><span class="n">get_execution_time</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">results</span>: <span class="nc">results</span><span class="p">.</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">(),</span>
-<span class="w">        </span><span class="p">};</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">batch_result</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2 id="5">5. 安全机制</h2>
-<h3 id="51">5.1 身份验证与授权</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">SecurityValidator</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">authentication_service</span>: <span class="nc">AuthenticationService</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">authorization_service</span>: <span class="nc">AuthorizationService</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">rate_limiter</span>: <span class="nc">RateLimiter</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">SecurityValidator</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="sd">/// 验证iAgent身份</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">validate_agent_identity</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">agent_id</span>: <span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span>
-<span class="w">        </span><span class="n">credentials</span>: <span class="kp">&amp;</span><span class="nc">AgentCredentials</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">AgentIdentity</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 验证代理身份</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">identity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">authentication_service</span><span class="p">.</span><span class="n">authenticate_agent</span><span class="p">(</span>
-<span class="w">            </span><span class="n">agent_id</span><span class="p">,</span>
-<span class="w">            </span><span class="n">credentials</span>
-<span class="w">        </span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 检查权限</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="bp">self</span><span class="p">.</span><span class="n">authorization_service</span><span class="p">.</span><span class="n">has_permission</span><span class="p">(</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">identity</span><span class="p">,</span>
-<span class="w">            </span><span class="s">&quot;automation_execute&quot;</span>
-<span class="w">        </span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="s">&quot;Insufficient permissions&quot;</span><span class="p">.</span><span class="n">into</span><span class="p">());</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 检查速率限制</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="bp">self</span><span class="p">.</span><span class="n">rate_limiter</span><span class="p">.</span><span class="n">check_rate_limit</span><span class="p">(</span><span class="n">agent_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="s">&quot;Rate limit exceeded&quot;</span><span class="p">.</span><span class="n">into</span><span class="p">());</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">identity</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="sd">/// 验证自动化操作</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">validate_automation_operation</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">operation</span>: <span class="kp">&amp;</span><span class="nc">AutomationOperation</span><span class="p">,</span>
-<span class="w">        </span><span class="n">agent_identity</span>: <span class="kp">&amp;</span><span class="nc">AgentIdentity</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 验证操作类型权限</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">operation_permission</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;automation_{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">operation</span><span class="p">.</span><span class="n">operation_type</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="bp">self</span><span class="p">.</span><span class="n">authorization_service</span><span class="p">.</span><span class="n">has_permission</span><span class="p">(</span>
-<span class="w">            </span><span class="n">agent_identity</span><span class="p">,</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">operation_permission</span>
-<span class="w">        </span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="s">&quot;Operation not permitted&quot;</span><span class="p">.</span><span class="n">into</span><span class="p">());</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 验证操作参数</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">validate_operation_parameters</span><span class="p">(</span><span class="n">operation</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 检查操作频率限制</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="bp">self</span><span class="p">.</span><span class="n">rate_limiter</span><span class="p">.</span><span class="n">check_operation_rate</span><span class="p">(</span>
-<span class="w">            </span><span class="n">agent_identity</span><span class="p">.</span><span class="n">agent_id</span><span class="p">,</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">operation</span><span class="p">.</span><span class="n">operation_type</span>
-<span class="w">        </span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="s">&quot;Operation rate limit exceeded&quot;</span><span class="p">.</span><span class="n">into</span><span class="p">());</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="52">5.2 操作审计与监控</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">AuditLogger</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">audit_store</span>: <span class="nc">AuditStore</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">real_time_monitor</span>: <span class="nc">RealTimeMonitor</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">AuditLogger</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="sd">/// 记录自动化操作</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">log_automation_operation</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">operation</span>: <span class="kp">&amp;</span><span class="nc">AutomationOperation</span><span class="p">,</span>
-<span class="w">        </span><span class="n">agent_identity</span>: <span class="kp">&amp;</span><span class="nc">AgentIdentity</span><span class="p">,</span>
-<span class="w">        </span><span class="n">result</span>: <span class="kp">&amp;</span><span class="nc">OperationResult</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="p">(),</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">audit_record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AuditRecord</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">timestamp</span>: <span class="nc">self</span><span class="p">.</span><span class="n">get_current_timestamp</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">agent_id</span>: <span class="nc">agent_identity</span><span class="p">.</span><span class="n">agent_id</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">operation_type</span>: <span class="nc">operation</span><span class="p">.</span><span class="n">operation_type</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">operation_id</span>: <span class="nc">operation</span><span class="p">.</span><span class="n">operation_id</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">parameters</span>: <span class="nc">operation</span><span class="p">.</span><span class="n">parameters</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">result</span>: <span class="nc">result</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">ip_address</span>: <span class="nc">agent_identity</span><span class="p">.</span><span class="n">ip_address</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">user_agent</span>: <span class="nc">agent_identity</span><span class="p">.</span><span class="n">user_agent</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">        </span><span class="p">};</span>
-
-<span class="w">        </span><span class="c1">// 存储审计记录</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">audit_store</span><span class="p">.</span><span class="n">store_record</span><span class="p">(</span><span class="o">&amp;</span><span class="n">audit_record</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 实时监控</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">real_time_monitor</span><span class="p">.</span><span class="n">notify_operation</span><span class="p">(</span><span class="o">&amp;</span><span class="n">audit_record</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 检查异常行为</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">anomaly</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">detect_anomaly</span><span class="p">(</span><span class="o">&amp;</span><span class="n">audit_record</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">alert_security_team</span><span class="p">(</span><span class="o">&amp;</span><span class="n">anomaly</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="sd">/// 异常行为检测</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">detect_anomaly</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">record</span>: <span class="kp">&amp;</span><span class="nc">AuditRecord</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="nb">Option</span><span class="o">&lt;</span><span class="n">SecurityAnomaly</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 检查操作频率异常</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">is_frequency_anomaly</span><span class="p">(</span><span class="n">record</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="nb">Some</span><span class="p">(</span><span class="n">SecurityAnomaly</span>::<span class="n">HighFrequency</span><span class="p">));</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 检查权限异常</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">is_permission_anomaly</span><span class="p">(</span><span class="n">record</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="nb">Some</span><span class="p">(</span><span class="n">SecurityAnomaly</span>::<span class="n">PermissionViolation</span><span class="p">));</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 检查时间异常</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">is_timing_anomaly</span><span class="p">(</span><span class="n">record</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="nb">Some</span><span class="p">(</span><span class="n">SecurityAnomaly</span>::<span class="n">UnusualTiming</span><span class="p">));</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="nb">None</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2 id="6">6. 性能优化</h2>
-<h3 id="61">6.1 异步处理与并发</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">AsyncProcessor</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">task_queue</span>: <span class="nc">Arc</span><span class="o">&lt;</span><span class="n">Mutex</span><span class="o">&lt;</span><span class="n">VecDeque</span><span class="o">&lt;</span><span class="n">AsyncTask</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">worker_pool</span>: <span class="nc">ThreadPool</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">result_cache</span>: <span class="nc">Arc</span><span class="o">&lt;</span><span class="n">RwLock</span><span class="o">&lt;</span><span class="n">HashMap</span><span class="o">&lt;</span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">TaskResult</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">AsyncProcessor</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="sd">/// 异步处理自动化任务</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">process_async_task</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">task</span>: <span class="nc">AsyncTask</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">TaskHandle</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 创建任务句柄</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">task_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">generate_task_id</span><span class="p">();</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">task_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TaskHandle</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">task_id</span>: <span class="nc">task_id</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">status</span>: <span class="nc">TaskStatus</span>::<span class="n">Queued</span><span class="p">,</span>
-<span class="w">            </span><span class="n">created_at</span>: <span class="nc">self</span><span class="p">.</span><span class="n">get_current_timestamp</span><span class="p">(),</span>
-<span class="w">        </span><span class="p">};</span>
-
-<span class="w">        </span><span class="c1">// 提交到工作池</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">task_queue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span>::<span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">.</span><span class="n">task_queue</span><span class="p">);</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">result_cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span>::<span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">.</span><span class="n">result_cache</span><span class="p">);</span>
-
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">worker_pool</span><span class="p">.</span><span class="n">spawn_ok</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="k">move</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// 执行任务</span>
-<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span>::<span class="n">execute_task</span><span class="p">(</span><span class="n">task</span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
-
-<span class="w">            </span><span class="c1">// 缓存结果</span>
-<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result_cache</span><span class="p">.</span><span class="n">write</span><span class="p">().</span><span class="k">await</span><span class="p">;</span>
-<span class="w">            </span><span class="n">cache</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
-
-<span class="w">            </span><span class="c1">// 从队列中移除</span>
-<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">task_queue</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="k">await</span><span class="p">;</span>
-<span class="w">            </span><span class="n">queue</span><span class="p">.</span><span class="n">retain</span><span class="p">(</span><span class="o">|</span><span class="n">t</span><span class="o">|</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">task_id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">task_id</span><span class="p">);</span>
-<span class="w">        </span><span class="p">});</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">task_handle</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="sd">/// 批量异步处理</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">process_batch_async</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">tasks</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">AsyncTask</span><span class="o">&gt;</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">TaskHandle</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span>::<span class="n">new</span><span class="p">();</span>
-
-<span class="w">        </span><span class="c1">// 并行提交任务</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">futures</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tasks</span>
-<span class="w">            </span><span class="p">.</span><span class="n">into_iter</span><span class="p">()</span>
-<span class="w">            </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">task</span><span class="o">|</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">process_async_task</span><span class="p">(</span><span class="n">task</span><span class="p">))</span>
-<span class="w">            </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-
-<span class="w">        </span><span class="c1">// 等待所有任务提交完成</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">futures</span>::<span class="n">future</span>::<span class="n">join_all</span><span class="p">(</span><span class="n">futures</span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">match</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nb">Ok</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">handles</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">handle</span><span class="p">),</span>
-<span class="w">                </span><span class="nb">Err</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="c1">// 记录错误但继续处理其他任务</span>
-<span class="w">                    </span><span class="fm">eprintln!</span><span class="p">(</span><span class="s">&quot;Failed to submit task: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="62">6.2 缓存策略</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">CacheManager</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">lru_cache</span>: <span class="nc">LruCache</span><span class="o">&lt;</span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">CachedData</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">ttl_cache</span>: <span class="nc">TtlCache</span><span class="o">&lt;</span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">CachedData</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">distributed_cache</span>: <span class="nc">DistributedCache</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">CacheManager</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="sd">/// 智能缓存策略</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">get_or_set_cached_data</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">key</span>: <span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span>
-<span class="w">        </span><span class="n">ttl</span>: <span class="nc">Duration</span><span class="p">,</span>
-<span class="w">        </span><span class="n">fetch_fn</span>: <span class="nc">impl</span><span class="w"> </span><span class="nb">FnOnce</span><span class="p">()</span><span class="w"> </span>-&gt; <span class="nc">Pin</span><span class="o">&lt;</span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">CachedData</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Send</span><span class="o">&gt;</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">CachedData</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 先检查LRU缓存</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">lru_cache</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">());</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 检查TTL缓存</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">ttl_cache</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">lru_cache</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">());</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 检查分布式缓存</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">distributed_cache</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">lru_cache</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">());</span>
-<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">ttl_cache</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span><span class="w"> </span><span class="n">ttl</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 从数据源获取</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fetch_fn</span><span class="p">().</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 更新所有缓存层</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">lru_cache</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">());</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">ttl_cache</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span><span class="w"> </span><span class="n">ttl</span><span class="p">);</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">distributed_cache</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span><span class="w"> </span><span class="n">ttl</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2 id="7">7. 监控与告警</h2>
-<h3 id="71">7.1 实时监控</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">RealTimeMonitor</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">metrics_collector</span>: <span class="nc">MetricsCollector</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">alert_manager</span>: <span class="nc">AlertManager</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">dashboard</span>: <span class="nc">Dashboard</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">RealTimeMonitor</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="sd">/// 监控自动化执行状态</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">monitor_automation_status</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">agent_id</span>: <span class="kp">&amp;</span><span class="kt">str</span>
-    <span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="n">AutomationMetrics</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AutomationMetrics</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">agent_id</span>: <span class="nc">agent_id</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">timestamp</span>: <span class="nc">self</span><span class="p">.</span><span class="n">get_current_timestamp</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">active_tasks</span>: <span class="nc">self</span><span class="p">.</span><span class="n">count_active_tasks</span><span class="p">(</span><span class="n">agent_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">,</span>
-<span class="w">            </span><span class="n">completed_tasks</span>: <span class="nc">self</span><span class="p">.</span><span class="n">count_completed_tasks</span><span class="p">(</span><span class="n">agent_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">,</span>
-<span class="w">            </span><span class="n">failed_tasks</span>: <span class="nc">self</span><span class="p">.</span><span class="n">count_failed_tasks</span><span class="p">(</span><span class="n">agent_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">,</span>
-<span class="w">            </span><span class="n">success_rate</span>: <span class="nc">self</span><span class="p">.</span><span class="n">calculate_success_rate</span><span class="p">(</span><span class="n">agent_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">,</span>
-<span class="w">            </span><span class="n">average_execution_time</span>: <span class="nc">self</span><span class="p">.</span><span class="n">calculate_average_execution_time</span><span class="p">(</span><span class="n">agent_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">,</span>
-<span class="w">            </span><span class="n">queue_length</span>: <span class="nc">self</span><span class="p">.</span><span class="n">get_queue_length</span><span class="p">(</span><span class="n">agent_id</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">,</span>
-<span class="w">        </span><span class="p">};</span>
-
-<span class="w">        </span><span class="c1">// 检查告警条件</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">check_alert_conditions</span><span class="p">(</span><span class="o">&amp;</span><span class="n">metrics</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 更新仪表板</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">dashboard</span><span class="p">.</span><span class="n">update_metrics</span><span class="p">(</span><span class="o">&amp;</span><span class="n">metrics</span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="sd">/// 检查告警条件</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">check_alert_conditions</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
-<span class="w">        </span><span class="n">metrics</span>: <span class="kp">&amp;</span><span class="nc">AutomationMetrics</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Result</span><span class="o">&lt;</span><span class="p">(),</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">std</span>::<span class="n">error</span>::<span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 检查成功率</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="n">success_rate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.95</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">alert_manager</span><span class="p">.</span><span class="n">send_alert</span><span class="p">(</span>
-<span class="w">                </span><span class="n">AlertLevel</span>::<span class="n">Warning</span><span class="p">,</span>
-<span class="w">                </span><span class="s">&quot;Low success rate&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="o">&amp;</span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;Agent {} has low success rate: {:.2}%&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                    </span><span class="n">metrics</span><span class="p">.</span><span class="n">agent_id</span><span class="p">,</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="n">success_rate</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">100.0</span><span class="p">)</span>
-<span class="w">            </span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 检查失败任务数量</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="n">failed_tasks</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">alert_manager</span><span class="p">.</span><span class="n">send_alert</span><span class="p">(</span>
-<span class="w">                </span><span class="n">AlertLevel</span>::<span class="n">Error</span><span class="p">,</span>
-<span class="w">                </span><span class="s">&quot;High failure rate&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="o">&amp;</span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;Agent {} has {} failed tasks&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                    </span><span class="n">metrics</span><span class="p">.</span><span class="n">agent_id</span><span class="p">,</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="n">failed_tasks</span><span class="p">)</span>
-<span class="w">            </span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// 检查队列长度</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="n">queue_length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">alert_manager</span><span class="p">.</span><span class="n">send_alert</span><span class="p">(</span>
-<span class="w">                </span><span class="n">AlertLevel</span>::<span class="n">Warning</span><span class="p">,</span>
-<span class="w">                </span><span class="s">&quot;Queue backlog&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="o">&amp;</span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;Agent {} has {} queued tasks&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                    </span><span class="n">metrics</span><span class="p">.</span><span class="n">agent_id</span><span class="p">,</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="n">queue_length</span><span class="p">)</span>
-<span class="w">            </span><span class="p">).</span><span class="k">await</span><span class="o">?</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="72">7.2 性能指标</h3>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[derive(Debug, Clone, Serialize, Deserialize)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">AutomationMetrics</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">agent_id</span>: <span class="nb">String</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">timestamp</span>: <span class="kt">u64</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">active_tasks</span>: <span class="kt">u32</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">completed_tasks</span>: <span class="kt">u32</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">failed_tasks</span>: <span class="kt">u32</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">success_rate</span>: <span class="kt">f64</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">average_execution_time</span>: <span class="nc">Duration</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">queue_length</span>: <span class="kt">u32</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">memory_usage</span>: <span class="kt">u64</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">cpu_usage</span>: <span class="kt">f64</span><span class="p">,</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">network_latency</span>: <span class="nc">Duration</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="cp">#[derive(Debug, Clone, PartialEq)]</span>
-<span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">AlertLevel</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Info</span><span class="p">,</span>
-<span class="w">    </span><span class="n">Warning</span><span class="p">,</span>
-<span class="w">    </span><span class="n">Error</span><span class="p">,</span>
-<span class="w">    </span><span class="n">Critical</span><span class="p">,</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2 id="8">8. 测试策略</h2>
-<h3 id="81">8.1 单元测试</h3>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[cfg(test)]</span>
-<span class="k">mod</span> <span class="nn">tests</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">use</span><span class="w"> </span><span class="k">super</span>::<span class="o">*</span><span class="p">;</span>
-
-<span class="w">    </span><span class="cp">#[tokio::test]</span>
-<span class="w">    </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">test_automated_commitment_setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IAgentConfig</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">agent_id</span>: <span class="s">&quot;test_agent&quot;</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">automation_enabled</span>: <span class="nc">true</span><span class="p">,</span>
-<span class="w">            </span><span class="n">commitment_strategy</span>: <span class="nc">CommitmentStrategy</span>::<span class="n">Immediate</span><span class="p">,</span>
-<span class="w">            </span><span class="n">reveal_conditions</span>: <span class="nc">vec</span><span class="o">!</span><span class="p">[],</span>
-<span class="w">            </span><span class="c1">// ... other fields</span>
-<span class="w">        </span><span class="p">};</span>
-
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IAgentCommitmentManager</span>::<span class="n">new</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">b&quot;test message&quot;</span><span class="p">.</span><span class="n">to_vec</span><span class="p">();</span>
-
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">manager</span><span class="p">.</span><span class="n">setup_automated_commitment</span><span class="p">(</span>
-<span class="w">            </span><span class="n">message</span><span class="p">,</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">CommitmentStrategy</span>::<span class="n">Immediate</span><span class="p">,</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="p">[]</span>
-<span class="w">        </span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
-
-<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">is_ok</span><span class="p">());</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">commitment_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">unwrap</span><span class="p">();</span>
-<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="o">!</span><span class="n">commitment_id</span><span class="p">.</span><span class="n">is_empty</span><span class="p">());</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="cp">#[tokio::test]</span>
-<span class="w">    </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">test_smart_trigger_evaluation</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">trigger_system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SmartTriggerSystem</span>::<span class="n">new</span><span class="p">();</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SystemContext</span>::<span class="n">default</span><span class="p">();</span>
-
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">decision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trigger_system</span><span class="p">.</span><span class="n">evaluate_smart_trigger</span><span class="p">(</span>
-<span class="w">            </span><span class="s">&quot;test_commitment&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">context</span>
-<span class="w">        </span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
-
-<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">decision</span><span class="p">.</span><span class="n">is_ok</span><span class="p">());</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">decision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">decision</span><span class="p">.</span><span class="n">unwrap</span><span class="p">();</span>
-<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">decision</span><span class="p">.</span><span class="n">confidence_score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0.0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">decision</span><span class="p">.</span><span class="n">confidence_score</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3 id="82">8.2 集成测试</h3>
-<div class="codehilite"><pre><span></span><code><span class="cp">#[cfg(test)]</span>
-<span class="k">mod</span> <span class="nn">integration_tests</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">use</span><span class="w"> </span><span class="k">super</span>::<span class="o">*</span><span class="p">;</span>
-
-<span class="w">    </span><span class="cp">#[tokio::test]</span>
-<span class="w">    </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">test_complete_automation_flow</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 创建自动化配置</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_test_automation_config</span><span class="p">();</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IAgentCommitmentManager</span>::<span class="n">new</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
-
-<span class="w">        </span><span class="c1">// 设置自动化承诺</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">b&quot;integration test message&quot;</span><span class="p">.</span><span class="n">to_vec</span><span class="p">();</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">commitment_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">manager</span><span class="p">.</span><span class="n">setup_automated_commitment</span><span class="p">(</span>
-<span class="w">            </span><span class="n">message</span><span class="p">,</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">CommitmentStrategy</span>::<span class="n">Conditional</span><span class="p">,</span>
-<span class="w">            </span><span class="o">&amp;</span><span class="n">create_test_reveal_conditions</span><span class="p">()</span>
-<span class="w">        </span><span class="p">).</span><span class="k">await</span><span class="p">.</span><span class="n">unwrap</span><span class="p">();</span>
-
-<span class="w">        </span><span class="c1">// 等待条件满足</span>
-<span class="w">        </span><span class="n">tokio</span>::<span class="n">time</span>::<span class="n">sleep</span><span class="p">(</span><span class="n">Duration</span>::<span class="n">from_secs</span><span class="p">(</span><span class="mi">2</span><span class="p">)).</span><span class="k">await</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 执行自动揭示</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">manager</span><span class="p">.</span><span class="n">execute_automated_reveal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">commitment_id</span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
-<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">is_ok</span><span class="p">());</span>
-
-<span class="w">        </span><span class="c1">// 验证状态</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">commitment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">manager</span><span class="p">.</span><span class="n">pending_commitments</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="o">&amp;</span><span class="n">commitment_id</span><span class="p">).</span><span class="n">unwrap</span><span class="p">();</span>
-<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">commitment</span><span class="p">.</span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">CommitmentStatus</span>::<span class="n">Revealed</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="cp">#[tokio::test]</span>
-<span class="w">    </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span> <span class="nf">test_batch_processing</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">batch_engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BatchProcessingEngine</span>::<span class="n">new</span><span class="p">();</span>
-
-<span class="w">        </span><span class="c1">// 创建批量任务</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">batch_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_test_batch_tasks</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">batch_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;test_batch&quot;</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// 处理批量任务</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">batch_engine</span><span class="p">.</span><span class="n">process_batch_commitments</span><span class="p">(</span><span class="n">batch_id</span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
-<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">is_ok</span><span class="p">());</span>
-
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">batch_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">unwrap</span><span class="p">();</span>
-<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">batch_result</span><span class="p">.</span><span class="n">total_tasks</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
-<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">batch_result</span><span class="p">.</span><span class="n">successful_tasks</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2 id="9">9. 部署与配置</h2>
-<h3 id="91">9.1 环境配置</h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># config/automation.yaml</span>
-<span class="nt">automation</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">max_concurrent_agents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
-<span class="w">  </span><span class="nt">default_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300s</span>
-<span class="w">  </span><span class="nt">retry_config</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">max_retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">    </span><span class="nt">retry_delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
-<span class="w">    </span><span class="nt">backoff_multiplier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
-
-<span class="w">  </span><span class="nt">security</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">authentication_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">rate_limiting</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">requests_per_minute</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<span class="w">      </span><span class="nt">burst_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-
-<span class="w">  </span><span class="nt">monitoring</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">metrics_collection_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
-<span class="w">    </span><span class="nt">alert_thresholds</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">success_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
-<span class="w">      </span><span class="nt">max_failure_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">      </span><span class="nt">max_queue_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
-
-<span class="w">  </span><span class="nt">caching</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">lru_cache_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">ttl_cache_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
-<span class="w">    </span><span class="nt">distributed_cache_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
-
-<h3 id="92-docker">9.2 Docker部署</h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Dockerfile.automation</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">rust:1.70</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="s">builder</span>
-
-<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
-<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
-
-<span class="k">RUN</span><span class="w"> </span>cargo<span class="w"> </span>build<span class="w"> </span>--release<span class="w"> </span>--bin<span class="w"> </span>iagent-automation
-
-<span class="k">FROM</span><span class="w"> </span><span class="s">debian:bullseye-slim</span>
-<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>ca-certificates<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
-
-<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
-<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/target/release/iagent-automation<span class="w"> </span>.
-
-<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;./iagent-automation&quot;</span><span class="p">]</span>
-</code></pre></div>
-
-<h2 id="10">10. 总结</h2>
+</code></pre>
+<br/>
+<h3>2.2 核心组件</h3>
+<p>1. **策略管理器**：管理不同的自动化策略和配置</p>
+<p>2. **条件监控器**：实时监控触发条件的变化</p>
+<p>3. **任务调度器**：调度和执行自动化任务</p>
+<p>4. **执行引擎**：执行具体的承诺和揭示操作</p>
+<p>5. **监控反馈**：监控执行状态并提供反馈</p>
+<br/>
+<h2>3. 核心数据结构</h2>
+<br/>
+<h3>3.1 自动化配置</h3>
+<pre><code>
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct IAgentConfig {
+    pub agent_id: String,                    // 代理唯一标识
+    pub automation_enabled: bool,            // 是否启用自动化
+    pub auto_commit_interval: Option&lt;u64&gt;,  // 自动承诺间隔（秒）
+    pub auto_reveal_delay: Option&lt;u64&gt;,     // 自动揭示延迟（秒）
+    pub commitment_strategy: CommitmentStrategy, // 承诺策略
+    pub reveal_conditions: Vec&lt;RevealCondition&gt;, // 揭示条件
+    pub batch_size: Option&lt;u32&gt;,            // 批量处理大小
+    pub smart_timing: bool,                 // 是否启用智能定时
+    pub retry_config: RetryConfig,          // 重试配置
+    pub security_config: SecurityConfig,    // 安全配置
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum CommitmentStrategy {
+    Immediate,      // 立即执行
+    Scheduled,      // 定时执行
+    Conditional,    // 条件触发
+    Batch,          // 批量处理
+    Adaptive,       // 自适应策略
+}
+</code></pre>
+<br/>
+<h3>3.2 触发条件</h3>
+<pre><code>
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RevealCondition {
+    pub condition_type: RevealConditionType,
+    pub threshold: Option&lt;u64&gt;,             // 阈值
+    pub time_trigger: Option&lt;u64&gt;,          // 时间触发器
+    pub participant_count: Option&lt;u32&gt;,     // 参与者数量
+    pub completion_percentage: Option&lt;f64&gt;, // 完成度百分比
+    pub custom_logic: Option&lt;String&gt;,       // 自定义逻辑
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum RevealConditionType {
+    TimeBased,          // 基于时间
+    ParticipantCount,   // 基于参与者数量
+    VoteCompletion,     // 基于投票完成度
+    Manual,             // 手动触发
+    Automatic,          // 自动触发
+    Smart,              // 智能触发
+}
+</code></pre>
+<br/>
+<h3>3.3 执行状态</h3>
+<pre><code>
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AutomationState {
+    pub is_automated: bool,                 // 是否启用自动化
+    pub config: Option&lt;IAgentConfig&gt;,       // 自动化配置
+    pub last_automation_run: Option&lt;u64&gt;,   // 最后运行时间
+    pub automation_status: AutomationStatus, // 自动化状态
+    pub batch_queue: Vec&lt;String&gt;,           // 批量队列
+    pub reveal_queue: Vec&lt;RevealData&gt;,      // 揭示队列
+    pub execution_history: Vec&lt;ExecutionRecord&gt;, // 执行历史
+    pub error_log: Vec&lt;ErrorRecord&gt;,        // 错误日志
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum AutomationStatus {
+    Active,         // 活跃
+    Paused,         // 暂停
+    Completed,      // 完成
+    Error,          // 错误
+    Maintenance,    // 维护中
+}
+</code></pre>
+<br/>
+<h2>4. 核心功能实现</h2>
+<br/>
+<h3>4.1 自动化承诺管理</h3>
+<pre><code>
+pub struct IAgentCommitmentManager {
+    pub config: IAgentConfig,
+    pub pending_commitments: HashMap&lt;String, PendingCommitment&gt;,
+    pub commitment_scheduler: CommitmentScheduler,
+    pub reveal_monitor: RevealMonitor,
+    pub security_validator: SecurityValidator,
+}
+
+impl IAgentCommitmentManager {
+    /// 设置自动化承诺
+    pub async fn setup_automated_commitment(
+        &amp;mut self,
+        message: Vec&lt;u8&gt;,
+        strategy: &amp;CommitmentStrategy,
+        conditions: &amp;[RevealCondition]
+    ) -&gt; Result&lt;String, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 验证输入参数
+        self.validate_input_parameters(&amp;message, strategy, conditions)?;
+        
+        // 生成承诺
+        let (commitment, randomness) = BitCommitment::new(&amp;message)?;
+        let commitment_id = self.generate_commitment_id(&amp;message);
+        
+        // 创建待处理承诺
+        let pending_commitment = PendingCommitment {
+            commitment_id: commitment_id.clone(),
+            message,
+            randomness,
+            created_at: self.get_current_timestamp(),
+            scheduled_reveal_time: self.calculate_reveal_time(&amp;conditions),
+            status: CommitmentStatus::Pending,
+            retry_count: 0,
+            last_error: None,
+        };
+        
+        // 根据策略安排执行
+        match strategy {
+            CommitmentStrategy::Immediate =&gt; {
+                self.execute_immediate_commitment(&amp;pending_commitment).await?;
+            }
+            CommitmentStrategy::Scheduled =&gt; {
+                self.schedule_commitment(&amp;pending_commitment).await?;
+            }
+            CommitmentStrategy::Conditional =&gt; {
+                self.setup_conditional_commitment(&amp;pending_commitment, conditions).await?;
+            }
+            CommitmentStrategy::Batch =&gt; {
+                self.add_to_batch_commitment(&amp;pending_commitment).await?;
+            }
+            CommitmentStrategy::Adaptive =&gt; {
+                self.setup_adaptive_commitment(&amp;pending_commitment, conditions).await?;
+            }
+        }
+        
+        // 保存到存储
+        self.pending_commitments.insert(commitment_id.clone(), pending_commitment);
+        
+        // 记录执行日志
+        self.log_execution_event(&amp;commitment_id, "commitment_setup", "success").await?;
+        
+        Ok(commitment_id)
+    }
+    
+    /// 执行自动揭示
+    pub async fn execute_automated_reveal(&amp;mut self, commitment_id: &amp;str) -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+        // 获取待处理承诺
+        let pending_commitment = self.pending_commitments.get_mut(commitment_id)
+            .ok_or("Commitment not found")?;
+        
+        // 检查状态
+        if pending_commitment.status != CommitmentStatus::Committed {
+            return Err("Commitment not ready for reveal".into());
+        }
+        
+        // 执行揭示
+        match self.reveal_commitment(pending_commitment).await {
+            Ok(_) =&gt; {
+                pending_commitment.status = CommitmentStatus::Revealed;
+                self.log_execution_event(commitment_id, "reveal_execution", "success").await?;
+            }
+            Err(e) =&gt; {
+                pending_commitment.status = CommitmentStatus::Error;
+                pending_commitment.last_error = Some(e.to_string());
+                self.log_execution_event(commitment_id, "reveal_execution", "error").await?;
+                return Err(e);
+            }
+        }
+        
+        Ok(())
+    }
+}
+</code></pre>
+<br/>
+<h3>4.2 智能触发系统</h3>
+<pre><code>
+pub struct SmartTriggerSystem {
+    pub trigger_engine: TriggerEngine,
+    pub condition_evaluator: ConditionEvaluator,
+    pub prediction_model: PredictionModel,
+}
+
+impl SmartTriggerSystem {
+    /// 智能触发条件评估
+    pub async fn evaluate_smart_trigger(
+        &amp;self,
+        commitment_id: &amp;str,
+        current_context: &amp;SystemContext
+    ) -&gt; Result&lt;TriggerDecision, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 获取历史数据
+        let historical_data = self.get_historical_data(commitment_id).await?;
+        
+        // 分析当前系统状态
+        let system_analysis = self.analyze_system_state(current_context).await?;
+        
+        // 预测最佳执行时机
+        let prediction = self.prediction_model.predict_optimal_timing(
+            &amp;historical_data,
+            &amp;system_analysis
+        ).await?;
+        
+        // 生成触发决策
+        let decision = TriggerDecision {
+            should_trigger: prediction.should_execute,
+            optimal_timing: prediction.optimal_timing,
+            confidence_score: prediction.confidence,
+            reasoning: prediction.reasoning,
+        };
+        
+        Ok(decision)
+    }
+    
+    /// 自适应触发策略
+    pub async fn adaptive_trigger_strategy(
+        &amp;self,
+        commitment_id: &amp;str,
+        strategy: &amp;CommitmentStrategy
+    ) -&gt; Result&lt;AdaptiveStrategy, Box&lt;dyn std::error::Error&gt;&gt; {
+        match strategy {
+            CommitmentStrategy::Adaptive =&gt; {
+                // 分析历史执行模式
+                let execution_patterns = self.analyze_execution_patterns(commitment_id).await?;
+                
+                // 生成自适应策略
+                let adaptive_strategy = AdaptiveStrategy {
+                    base_strategy: CommitmentStrategy::Conditional,
+                    dynamic_conditions: self.generate_dynamic_conditions(&amp;execution_patterns),
+                    learning_rate: 0.1,
+                    adaptation_threshold: 0.8,
+                };
+                
+                Ok(adaptive_strategy)
+            }
+            _ =&gt; {
+                // 使用固定策略
+                Ok(AdaptiveStrategy {
+                    base_strategy: strategy.clone(),
+                    dynamic_conditions: Vec::new(),
+                    learning_rate: 0.0,
+                    adaptation_threshold: 1.0,
+                })
+            }
+        }
+    }
+}
+</code></pre>
+<br/>
+<h3>4.3 批量处理引擎</h3>
+<pre><code>
+pub struct BatchProcessingEngine {
+    pub batch_queue: VecDeque&lt;BatchTask&gt;,
+    pub batch_config: BatchConfig,
+    pub processor_pool: ThreadPool,
+}
+
+impl BatchProcessingEngine {
+    /// 批量承诺处理
+    pub async fn process_batch_commitments(
+        &amp;mut self,
+        batch_id: &amp;str
+    ) -&gt; Result&lt;BatchResult, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 获取批量任务
+        let batch_tasks = self.get_batch_tasks(batch_id).await?;
+        
+        // 验证批量任务
+        self.validate_batch_tasks(&amp;batch_tasks).await?;
+        
+        // 并行处理承诺
+        let results: Vec&lt;Result&lt;CommitmentResult, Box&lt;dyn std::error::Error&gt;&gt;&gt; = batch_tasks
+            .into_par_iter()
+            .map(|task| self.process_single_commitment(task))
+            .collect();
+        
+        // 汇总结果
+        let batch_result = BatchResult {
+            batch_id: batch_id.to_string(),
+            total_tasks: results.len(),
+            successful_tasks: results.iter().filter(|r| r.is_ok()).count(),
+            failed_tasks: results.iter().filter(|r| r.is_err()).count(),
+            execution_time: self.get_execution_time(),
+            results: results.into_iter().collect(),
+        };
+        
+        // 记录批量处理结果
+        self.log_batch_result(&amp;batch_result).await?;
+        
+        Ok(batch_result)
+    }
+    
+    /// 批量揭示处理
+    pub async fn process_batch_reveals(
+        &amp;mut self,
+        batch_id: &amp;str
+    ) -&gt; Result&lt;BatchResult, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 获取批量揭示任务
+        let reveal_tasks = self.get_reveal_tasks(batch_id).await?;
+        
+        // 验证揭示条件
+        self.validate_reveal_conditions(&amp;reveal_tasks).await?;
+        
+        // 并行处理揭示
+        let results: Vec&lt;Result&lt;RevealResult, Box&lt;dyn std::error::Error&gt;&gt;&gt; = reveal_tasks
+            .into_par_iter()
+            .map(|task| self.process_single_reveal(task))
+            .collect();
+        
+        // 汇总结果
+        let batch_result = BatchResult {
+            batch_id: batch_id.to_string(),
+            total_tasks: results.len(),
+            successful_tasks: results.iter().filter(|r| r.is_ok()).count(),
+            failed_tasks: results.iter().filter(|r| r.is_err()).count(),
+            execution_time: self.get_execution_time(),
+            results: results.into_iter().collect(),
+        };
+        
+        Ok(batch_result)
+    }
+}
+</code></pre>
+<br/>
+<h2>5. 安全机制</h2>
+<br/>
+<h3>5.1 身份验证与授权</h3>
+<pre><code>
+pub struct SecurityValidator {
+    pub authentication_service: AuthenticationService,
+    pub authorization_service: AuthorizationService,
+    pub rate_limiter: RateLimiter,
+}
+
+impl SecurityValidator {
+    /// 验证iAgent身份
+    pub async fn validate_agent_identity(
+        &amp;self,
+        agent_id: &amp;str,
+        credentials: &amp;AgentCredentials
+    ) -&gt; Result&lt;AgentIdentity, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 验证代理身份
+        let identity = self.authentication_service.authenticate_agent(
+            agent_id,
+            credentials
+        ).await?;
+        
+        // 检查权限
+        if !self.authorization_service.has_permission(
+            &amp;identity,
+            "automation_execute"
+        ).await? {
+            return Err("Insufficient permissions".into());
+        }
+        
+        // 检查速率限制
+        if !self.rate_limiter.check_rate_limit(agent_id).await? {
+            return Err("Rate limit exceeded".into());
+        }
+        
+        Ok(identity)
+    }
+    
+    /// 验证自动化操作
+    pub async fn validate_automation_operation(
+        &amp;self,
+        operation: &amp;AutomationOperation,
+        agent_identity: &amp;AgentIdentity
+    ) -&gt; Result&lt;bool, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 验证操作类型权限
+        let operation_permission = format!("automation_{}", operation.operation_type);
+        if !self.authorization_service.has_permission(
+            agent_identity,
+            &amp;operation_permission
+        ).await? {
+            return Err("Operation not permitted".into());
+        }
+        
+        // 验证操作参数
+        self.validate_operation_parameters(operation).await?;
+        
+        // 检查操作频率限制
+        if !self.rate_limiter.check_operation_rate(
+            agent_identity.agent_id,
+            &amp;operation.operation_type
+        ).await? {
+            return Err("Operation rate limit exceeded".into());
+        }
+        
+        Ok(true)
+    }
+}
+</code></pre>
+<br/>
+<h3>5.2 操作审计与监控</h3>
+<pre><code>
+pub struct AuditLogger {
+    pub audit_store: AuditStore,
+    pub real_time_monitor: RealTimeMonitor,
+}
+
+impl AuditLogger {
+    /// 记录自动化操作
+    pub async fn log_automation_operation(
+        &amp;self,
+        operation: &amp;AutomationOperation,
+        agent_identity: &amp;AgentIdentity,
+        result: &amp;OperationResult
+    ) -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+        let audit_record = AuditRecord {
+            timestamp: self.get_current_timestamp(),
+            agent_id: agent_identity.agent_id.clone(),
+            operation_type: operation.operation_type.clone(),
+            operation_id: operation.operation_id.clone(),
+            parameters: operation.parameters.clone(),
+            result: result.clone(),
+            ip_address: agent_identity.ip_address.clone(),
+            user_agent: agent_identity.user_agent.clone(),
+        };
+        
+        // 存储审计记录
+        self.audit_store.store_record(&amp;audit_record).await?;
+        
+        // 实时监控
+        self.real_time_monitor.notify_operation(&amp;audit_record).await?;
+        
+        // 检查异常行为
+        if let Some(anomaly) = self.detect_anomaly(&amp;audit_record).await? {
+            self.alert_security_team(&amp;anomaly).await?;
+        }
+        
+        Ok(())
+    }
+    
+    /// 异常行为检测
+    pub async fn detect_anomaly(
+        &amp;self,
+        record: &amp;AuditRecord
+    ) -&gt; Result&lt;Option&lt;SecurityAnomaly&gt;, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 检查操作频率异常
+        if self.is_frequency_anomaly(record).await? {
+            return Ok(Some(SecurityAnomaly::HighFrequency));
+        }
+        
+        // 检查权限异常
+        if self.is_permission_anomaly(record).await? {
+            return Ok(Some(SecurityAnomaly::PermissionViolation));
+        }
+        
+        // 检查时间异常
+        if self.is_timing_anomaly(record).await? {
+            return Ok(Some(SecurityAnomaly::UnusualTiming));
+        }
+        
+        Ok(None)
+    }
+}
+</code></pre>
+<br/>
+<h2>6. 性能优化</h2>
+<br/>
+<h3>6.1 异步处理与并发</h3>
+<pre><code>
+pub struct AsyncProcessor {
+    pub task_queue: Arc&lt;Mutex&lt;VecDeque&lt;AsyncTask&gt;&gt;&gt;,
+    pub worker_pool: ThreadPool,
+    pub result_cache: Arc&lt;RwLock&lt;HashMap&lt;String, TaskResult&gt;&gt;&gt;,
+}
+
+impl AsyncProcessor {
+    /// 异步处理自动化任务
+    pub async fn process_async_task(
+        &amp;self,
+        task: AsyncTask
+    ) -&gt; Result&lt;TaskHandle, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 创建任务句柄
+        let task_id = self.generate_task_id();
+        let task_handle = TaskHandle {
+            task_id: task_id.clone(),
+            status: TaskStatus::Queued,
+            created_at: self.get_current_timestamp(),
+        };
+        
+        // 提交到工作池
+        let task_queue = Arc::clone(&amp;self.task_queue);
+        let result_cache = Arc::clone(&amp;self.result_cache);
+        
+        self.worker_pool.spawn_ok(async move {
+            // 执行任务
+            let result = Self::execute_task(task).await;
+            
+            // 缓存结果
+            let mut cache = result_cache.write().await;
+            cache.insert(task_id, result);
+            
+            // 从队列中移除
+            let mut queue = task_queue.lock().await;
+            queue.retain(|t| t.task_id != task_id);
+        });
+        
+        Ok(task_handle)
+    }
+    
+    /// 批量异步处理
+    pub async fn process_batch_async(
+        &amp;self,
+        tasks: Vec&lt;AsyncTask&gt;
+    ) -&gt; Result&lt;Vec&lt;TaskHandle&gt;, Box&lt;dyn std::error::Error&gt;&gt; {
+        let mut handles = Vec::new();
+        
+        // 并行提交任务
+        let futures: Vec&lt;_&gt; = tasks
+            .into_iter()
+            .map(|task| self.process_async_task(task))
+            .collect();
+        
+        // 等待所有任务提交完成
+        let results = futures::future::join_all(futures).await;
+        
+        for result in results {
+            match result {
+                Ok(handle) =&gt; handles.push(handle),
+                Err(e) =&gt; {
+                    // 记录错误但继续处理其他任务
+                    eprintln!("Failed to submit task: {}", e);
+                }
+            }
+        }
+        
+        Ok(handles)
+    }
+}
+</code></pre>
+<br/>
+<h3>6.2 缓存策略</h3>
+<pre><code>
+pub struct CacheManager {
+    pub lru_cache: LruCache&lt;String, CachedData&gt;,
+    pub ttl_cache: TtlCache&lt;String, CachedData&gt;,
+    pub distributed_cache: DistributedCache,
+}
+
+impl CacheManager {
+    /// 智能缓存策略
+    pub async fn get_or_set_cached_data(
+        &amp;mut self,
+        key: &amp;str,
+        ttl: Duration,
+        fetch_fn: impl FnOnce() -&gt; Pin&lt;Box&lt;dyn Future&lt;Output = Result&lt;CachedData, Box&lt;dyn std::error::Error&gt;&gt;&gt; + Send&gt;
+    ) -&gt; Result&lt;CachedData, Box&lt;dyn std::error::Error&gt;&gt; {
+        // 先检查LRU缓存
+        if let Some(data) = self.lru_cache.get(key) {
+            return Ok(data.clone());
+        }
+        
+        // 检查TTL缓存
+        if let Some(data) = self.ttl_cache.get(key) {
+            self.lru_cache.put(key.to_string(), data.clone());
+            return Ok(data);
+        }
+        
+        // 检查分布式缓存
+        if let Some(data) = self.distributed_cache.get(key).await? {
+            self.lru_cache.put(key.to_string(), data.clone());
+            self.ttl_cache.set(key.to_string(), data.clone(), ttl);
+            return Ok(data);
+        }
+        
+        // 从数据源获取
+        let data = fetch_fn().await?;
+        
+        // 更新所有缓存层
+        self.lru_cache.put(key.to_string(), data.clone());
+        self.ttl_cache.set(key.to_string(), data.clone(), ttl);
+        self.distributed_cache.set(key.to_string(), data.clone(), ttl).await?;
+        
+        Ok(data)
+    }
+}
+</code></pre>
+<br/>
+<h2>7. 监控与告警</h2>
+<br/>
+<h3>7.1 实时监控</h3>
+<pre><code>
+pub struct RealTimeMonitor {
+    pub metrics_collector: MetricsCollector,
+    pub alert_manager: AlertManager,
+    pub dashboard: Dashboard,
+}
+
+impl RealTimeMonitor {
+    /// 监控自动化执行状态
+    pub async fn monitor_automation_status(
+        &amp;self,
+        agent_id: &amp;str
+    ) -&gt; Result&lt;AutomationMetrics, Box&lt;dyn std::error::Error&gt;&gt; {
+        let metrics = AutomationMetrics {
+            agent_id: agent_id.to_string(),
+            timestamp: self.get_current_timestamp(),
+            active_tasks: self.count_active_tasks(agent_id).await?,
+            completed_tasks: self.count_completed_tasks(agent_id).await?,
+            failed_tasks: self.count_failed_tasks(agent_id).await?,
+            success_rate: self.calculate_success_rate(agent_id).await?,
+            average_execution_time: self.calculate_average_execution_time(agent_id).await?,
+            queue_length: self.get_queue_length(agent_id).await?,
+        };
+        
+        // 检查告警条件
+        self.check_alert_conditions(&amp;metrics).await?;
+        
+        // 更新仪表板
+        self.dashboard.update_metrics(&amp;metrics).await?;
+        
+        Ok(metrics)
+    }
+    
+    /// 检查告警条件
+    pub async fn check_alert_conditions(
+        &amp;self,
+        metrics: &amp;AutomationMetrics
+    ) -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+        // 检查成功率
+        if metrics.success_rate &lt; 0.95 {
+            self.alert_manager.send_alert(
+                AlertLevel::Warning,
+                "Low success rate",
+                &amp;format!("Agent {} has low success rate: {:.2}%", 
+                    metrics.agent_id, metrics.success_rate * 100.0)
+            ).await?;
+        }
+        
+        // 检查失败任务数量
+        if metrics.failed_tasks &gt; 10 {
+            self.alert_manager.send_alert(
+                AlertLevel::Error,
+                "High failure rate",
+                &amp;format!("Agent {} has {} failed tasks", 
+                    metrics.agent_id, metrics.failed_tasks)
+            ).await?;
+        }
+        
+        // 检查队列长度
+        if metrics.queue_length &gt; 100 {
+            self.alert_manager.send_alert(
+                AlertLevel::Warning,
+                "Queue backlog",
+                &amp;format!("Agent {} has {} queued tasks", 
+                    metrics.agent_id, metrics.queue_length)
+            ).await?;
+        }
+        
+        Ok(())
+    }
+}
+</code></pre>
+<br/>
+<h3>7.2 性能指标</h3>
+<pre><code>
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AutomationMetrics {
+    pub agent_id: String,
+    pub timestamp: u64,
+    pub active_tasks: u32,
+    pub completed_tasks: u32,
+    pub failed_tasks: u32,
+    pub success_rate: f64,
+    pub average_execution_time: Duration,
+    pub queue_length: u32,
+    pub memory_usage: u64,
+    pub cpu_usage: f64,
+    pub network_latency: Duration,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum AlertLevel {
+    Info,
+    Warning,
+    Error,
+    Critical,
+}
+</code></pre>
+<br/>
+<h2>8. 测试策略</h2>
+<br/>
+<h3>8.1 单元测试</h3>
+<pre><code>
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[tokio::test]
+    async fn test_automated_commitment_setup() {
+        let config = IAgentConfig {
+            agent_id: "test_agent".to_string(),
+            automation_enabled: true,
+            commitment_strategy: CommitmentStrategy::Immediate,
+            reveal_conditions: vec![],
+            // ... other fields
+        };
+        
+        let mut manager = IAgentCommitmentManager::new(config);
+        let message = b"test message".to_vec();
+        
+        let result = manager.setup_automated_commitment(
+            message,
+            &amp;CommitmentStrategy::Immediate,
+            &amp;[]
+        ).await;
+        
+        assert!(result.is_ok());
+        let commitment_id = result.unwrap();
+        assert!(!commitment_id.is_empty());
+    }
+    
+    #[tokio::test]
+    async fn test_smart_trigger_evaluation() {
+        let trigger_system = SmartTriggerSystem::new();
+        let context = SystemContext::default();
+        
+        let decision = trigger_system.evaluate_smart_trigger(
+            "test_commitment",
+            &amp;context
+        ).await;
+        
+        assert!(decision.is_ok());
+        let decision = decision.unwrap();
+        assert!(decision.confidence_score &gt;= 0.0 &amp;&amp; decision.confidence_score &lt;= 1.0);
+    }
+}
+</code></pre>
+<br/>
+<h3>8.2 集成测试</h3>
+<pre><code>
+#[cfg(test)]
+mod integration_tests {
+    use super::*;
+    
+    #[tokio::test]
+    async fn test_complete_automation_flow() {
+        // 创建自动化配置
+        let config = create_test_automation_config();
+        let mut manager = IAgentCommitmentManager::new(config);
+        
+        // 设置自动化承诺
+        let message = b"integration test message".to_vec();
+        let commitment_id = manager.setup_automated_commitment(
+            message,
+            &amp;CommitmentStrategy::Conditional,
+            &amp;create_test_reveal_conditions()
+        ).await.unwrap();
+        
+        // 等待条件满足
+        tokio::time::sleep(Duration::from_secs(2)).await;
+        
+        // 执行自动揭示
+        let result = manager.execute_automated_reveal(&amp;commitment_id).await;
+        assert!(result.is_ok());
+        
+        // 验证状态
+        let commitment = manager.pending_commitments.get(&amp;commitment_id).unwrap();
+        assert_eq!(commitment.status, CommitmentStatus::Revealed);
+    }
+    
+    #[tokio::test]
+    async fn test_batch_processing() {
+        let batch_engine = BatchProcessingEngine::new();
+        
+        // 创建批量任务
+        let batch_tasks = create_test_batch_tasks(10);
+        let batch_id = "test_batch";
+        
+        // 处理批量任务
+        let result = batch_engine.process_batch_commitments(batch_id).await;
+        assert!(result.is_ok());
+        
+        let batch_result = result.unwrap();
+        assert_eq!(batch_result.total_tasks, 10);
+        assert!(batch_result.successful_tasks &gt; 0);
+    }
+}
+</code></pre>
+<br/>
+<h2>9. 部署与配置</h2>
+<br/>
+<h3>9.1 环境配置</h3>
+<pre><code>
+# config/automation.yaml
+automation:
+  enabled: true
+  max_concurrent_agents: 100
+  default_timeout: 300s
+  retry_config:
+    max_retries: 3
+    retry_delay: 5s
+    backoff_multiplier: 2.0
+  
+  security:
+    authentication_required: true
+    rate_limiting:
+      requests_per_minute: 60
+      burst_limit: 10
+    
+  monitoring:
+    metrics_collection_interval: 30s
+    alert_thresholds:
+      success_rate: 0.95
+      max_failure_count: 10
+      max_queue_length: 100
+    
+  caching:
+    lru_cache_size: 1000
+    ttl_cache_size: 500
+    distributed_cache_enabled: true
+</code></pre>
+<br/>
+<h3>9.2 Docker部署</h3>
+<pre><code>
+# Dockerfile.automation
+FROM rust:1.70 as builder
+
+WORKDIR /app
+COPY . .
+
+RUN cargo build --release --bin iagent-automation
+
+FROM debian:bullseye-slim
+RUN apt-get update &amp;&amp; apt-get install -y ca-certificates &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --from=builder /app/target/release/iagent-automation .
+
+EXPOSE 8080
+CMD ["./iagent-automation"]
+</code></pre>
+<br/>
+<h2>10. 总结</h2>
+<br/>
 <p>本iAgent自动化功能设计说明书详细描述了如何实现比特承诺模型的自动化承诺与揭示流程。通过以下核心特性，系统能够提供高效、安全、可靠的自动化服务：</p>
-<h3 id="101">10.1 核心优势</h3>
-<ol>
-<li><strong>自动化程度高</strong>：支持多种自动化策略，减少人工干预</li>
-<li><strong>智能触发</strong>：基于多种条件和智能算法自动触发操作</li>
-<li><strong>批量处理</strong>：支持大规模操作的批量处理，提高效率</li>
-<li><strong>安全可靠</strong>：完善的安全机制和故障恢复能力</li>
-<li><strong>实时监控</strong>：全面的监控和告警系统</li>
-</ol>
-<h3 id="102">10.2 应用价值</h3>
-<ol>
-<li><strong>提高效率</strong>：自动化流程显著提高系统处理效率</li>
-<li><strong>降低成本</strong>：减少人工操作，降低运营成本</li>
-<li><strong>提升体验</strong>：用户设置后自动执行，提升用户体验</li>
-<li><strong>增强可靠性</strong>：自动化执行减少人为错误</li>
-<li><strong>支持扩展</strong>：支持大规模并发自动化任务</li>
-</ol>
-<h3 id="103">10.3 技术特色</h3>
-<ol>
-<li><strong>Rust实现</strong>：高性能、内存安全的系统级语言</li>
-<li><strong>异步架构</strong>：支持高并发异步处理</li>
-<li><strong>智能算法</strong>：自适应和预测性自动化策略</li>
-<li><strong>多层缓存</strong>：优化的缓存策略提升性能</li>
-<li><strong>区块链集成</strong>：与智能合约深度集成</li>
-</ol>
+<br/>
+<h3>10.1 核心优势</h3>
+<p>1. **自动化程度高**：支持多种自动化策略，减少人工干预</p>
+<p>2. **智能触发**：基于多种条件和智能算法自动触发操作</p>
+<p>3. **批量处理**：支持大规模操作的批量处理，提高效率</p>
+<p>4. **安全可靠**：完善的安全机制和故障恢复能力</p>
+<p>5. **实时监控**：全面的监控和告警系统</p>
+<br/>
+<h3>10.2 应用价值</h3>
+<p>1. **提高效率**：自动化流程显著提高系统处理效率</p>
+<p>2. **降低成本**：减少人工操作，降低运营成本</p>
+<p>3. **提升体验**：用户设置后自动执行，提升用户体验</p>
+<p>4. **增强可靠性**：自动化执行减少人为错误</p>
+<p>5. **支持扩展**：支持大规模并发自动化任务</p>
+<br/>
+<h3>10.3 技术特色</h3>
+<p>1. **Rust实现**：高性能、内存安全的系统级语言</p>
+<p>2. **异步架构**：支持高并发异步处理</p>
+<p>3. **智能算法**：自适应和预测性自动化策略</p>
+<p>4. **多层缓存**：优化的缓存策略提升性能</p>
+<p>5. **区块链集成**：与智能合约深度集成</p>
+<br/>
 <p>通过本设计，系统能够实现"用户设置之后可以自动化的实现承诺与揭示流程"的核心需求，为用户提供便捷、高效的自动化服务。</p>
-<h2 id="_1">评估标准与结论</h2>
-<h3 id="_2">评估标准（统一口径）</h3>
-<ul>
-<li>SoT与边界：自动化的配置/日志/审计以CID/版本存于IPFS，链上仅存摘要索引。</li>
-<li>可靠性：失败重试、回退与熔断；批处理成功率与延迟达标。</li>
-<li>安全性：身份鉴别、权限校验、审计溯源与异常检测。</li>
-<li>运维：实时监控、阈值告警与可观测性指标完善。</li>
-</ul>
-<h3 id="_3">结论</h3>
+<br/>
+<h2>评估标准与结论</h2>
+<br/>
+<h3>评估标准（统一口径）</h3>
+<p>- SoT与边界：自动化的配置/日志/审计以CID/版本存于IPFS，链上仅存摘要索引。</p>
+<p>- 可靠性：失败重试、回退与熔断；批处理成功率与延迟达标。</p>
+<p>- 安全性：身份鉴别、权限校验、审计溯源与异常检测。</p>
+<p>- 运维：实时监控、阈值告警与可观测性指标完善。</p>
+<br/>
+<h3>结论</h3>
 <p>自动化方案在可用性与安全性上满足生产要求，建议与统一状态机联动上线。</p>
-<hr>
-<p>最后更新：2025-08<br>
-维护人：luckeedao 技术团队</p>
+<br/>
+<p>---</p>
+<br/>
+<p>**文档编制日期**：2025年8月</p>
+<p>**文档编制人**：luckeeDAO技术评估团队</p>
+<p>**文档审核人**：luckeeDAO管理委员会</p>
 </body>
 </html>
